@@ -21,7 +21,7 @@ export class App {
     this.server.registerMiddleware(loggerMiddleware);
   }
   private registerRoutes(): void {
-    this.server.registerRoutes("/api/subscription/admin", adminRoutes);
+    this.server.registerRoutes("/api/payment/admin", adminRoutes);
   }
 
   private registerErrorHandler(): void {
