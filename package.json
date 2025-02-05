@@ -15,7 +15,7 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
-    "@buxlo/common": "^1.0.53",
+    "@buxlo/common": "^1.0.55",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
