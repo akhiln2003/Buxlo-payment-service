@@ -3,7 +3,11 @@ import loggerMiddleware from "./presentation/middlewares/loggerMiddleware";
 import { Iserver } from "./domain/interfaces/Iserver";
 import { AdminRouter } from "./presentation/routes/adminRouts";
 import { CommonRouter } from "./presentation/routes/commonRouts";
-import { connectDB, disconnectDB } from "./infrastructure/database/sql/connection";
+import {
+  connectDB,
+  disconnectDB,
+} from "./infrastructure/database/sql/connection";
+import { messageBroker } from "./infrastructure/MessageBroker/config";
 
 export class App {
   constructor(private server: Iserver) {}
@@ -12,6 +16,7 @@ export class App {
     this.registerMiddleware();
     this.registerRoutes();
     this.registerErrorHandler();
+    await this.connectKafka();
     await this.connectDB();
   }
 
@@ -36,6 +41,7 @@ export class App {
 
   async shutdown(): Promise<void> {
     await disconnectDB();
+    await messageBroker.disconnect();
     console.log("Shut dow server");
   }
   private async connectDB() {
@@ -45,5 +51,9 @@ export class App {
       console.log("Server could not be started", error);
       process.exit(1);
     }
+  }
+
+  private async connectKafka(): Promise<void> {
+    await messageBroker.connect();
   }
 }
