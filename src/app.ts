@@ -1,11 +1,9 @@
 import { errorHandler } from "@buxlo/common";
-import {
-  connectDB,
-  disconnectDB,
-} from "./infrastructure/database/mongodb/connection";
 import loggerMiddleware from "./presentation/middlewares/loggerMiddleware";
-import { adminRoutes } from "./presentation/routes/adminRouts";
 import { Iserver } from "./domain/interfaces/Iserver";
+import { AdminRouter } from "./presentation/routes/adminRouts";
+import { CommonRouter } from "./presentation/routes/commonRouts";
+import { connectDB, disconnectDB } from "./infrastructure/database/sql/connection";
 
 export class App {
   constructor(private server: Iserver) {}
@@ -21,7 +19,11 @@ export class App {
     this.server.registerMiddleware(loggerMiddleware);
   }
   private registerRoutes(): void {
+    const adminRoutes = new AdminRouter().getRouter();
+    const commonRoutes = new CommonRouter().getRouter();
+
     this.server.registerRoutes("/api/payment/admin", adminRoutes);
+    this.server.registerRoutes("/api/payment/common", commonRoutes);
   }
 
   private registerErrorHandler(): void {
@@ -44,6 +46,4 @@ export class App {
       process.exit(1);
     }
   }
-
-  
 }

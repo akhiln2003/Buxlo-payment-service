@@ -11,13 +11,13 @@ export class UpdateSubscriptionPlanController {
   ) {}
   update = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { id, updatedData } = req.body;
+      const { data } = req.body;
 
-      const data = await this.updateSubscriptionPlanUseCase.execute(
-        id,
-        updatedData as IsubscriptionPlanData
+      const updatedData = await this.updateSubscriptionPlanUseCase.execute(
+        data.id,
+        data.updatedData as IsubscriptionPlanData
       );
-      res.status(HttpStatusCode.OK).json({ data });
+      res.status(HttpStatusCode.OK).json({ updatedData });
     } catch (error) {
       next(error);
     }

@@ -15,6 +15,8 @@ export class UpdateSubscriptionPlanUseCase
     updatedData: IsubscriptionPlanData
   ): Promise<any | Subscription> {
     try {
+      console.log(id,updatedData);
+      
       const data = await this.subscriptionPlanRepository.update(
         id,
         updatedData
