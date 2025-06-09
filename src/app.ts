@@ -13,11 +13,11 @@ export class App {
   constructor(private server: Iserver) {}
 
   async initialize(): Promise<void> {
+    await this.connectKafka();
+    await this.connectDB();
     this.registerMiddleware();
     this.registerRoutes();
     this.registerErrorHandler();
-    await this.connectKafka();
-    await this.connectDB();
   }
 
   private registerMiddleware(): void {

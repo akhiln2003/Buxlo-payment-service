@@ -4,20 +4,22 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   BaseEntity,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
 } from "typeorm";
 
 @Entity("wallets")
 export class WalletEntity extends BaseEntity {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn("uuid")
   id: string;
+
+  @Column()
+  userId: string;
 
   @Column()
   name: string;
 
   @Column("decimal")
   balance: number;
-
 
   @CreateDateColumn()
   createdAt: Date;

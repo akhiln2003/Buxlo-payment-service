@@ -14,16 +14,9 @@ export class WalletRepository implements IwalletRepository {
 
   async create(data: Wallet): Promise<Wallet> {
     try {
-      const existingWallet = await this.repository.findOneBy({ id: data.id });
-
-      if (existingWallet) {
-        existingWallet.name = data.name;
-        return await this.repository.save(existingWallet);
-      } else {
-        // Create and save new wallet
-        const wallet = this.repository.create(data);
-        return await this.repository.save(wallet);
-      }
+      // Create and save new wallet
+      const wallet = this.repository.create(data);
+      return await this.repository.save(wallet);
     } catch (error: any) {
       throw new BadRequest(`Failed to create wallet: ${error.message}`);
     }
@@ -42,9 +35,14 @@ export class WalletRepository implements IwalletRepository {
     }
   }
 
-  async fetchWallet(id: string): Promise<Wallet | null> {
+  async fetchWallet(userId: string): Promise<Wallet[] | null> {
     try {
-      return await this.repository.findOneBy({ id: id });
+      return await this.repository.find({
+        where: { userId: userId },
+        order: {
+          createdAt: "DESC",
+        },
+      });
     } catch (error: any) {
       console.error("Error from wallet repository faild to fetch ", error);
       throw new BadRequest(`Failed to fetch wallet: ${error.message}`);

@@ -18,7 +18,7 @@ export class WalletCreatedConsumer extends KafkaConsumer<UserCreatedEvent> {
     try {
       const walletRepository = new WalletRepository();
       const wallet: Wallet = {
-        id: data.id,
+        userId: data.id,
         name: data.name,
         balance: 0,
       };

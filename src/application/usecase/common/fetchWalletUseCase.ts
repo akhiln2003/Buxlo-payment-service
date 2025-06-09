@@ -5,7 +5,7 @@ import { IfetchWalletUseCase } from "../../interface/common/IfetchWalletUseCase"
 
 export class FetchWalletUseCase implements IfetchWalletUseCase {
   constructor(private walletRepo: IwalletRepository) {}
-  async execute(id: string): Promise<Wallet | null> {
+  async execute(id: string): Promise<Wallet[] | null> {
     try {
       return await this.walletRepo.fetchWallet(id);
     } catch (error) {
