@@ -2,6 +2,8 @@ import { DataSource } from "typeorm";
 import "dotenv/config";
 import { SubscriptionEntity } from "./entity/subscription.entity";
 import { WalletEntity } from "./entity/wallet.entity";
+import { BookingPaymentEntity } from "./entity/bookingPayment.entity";
+import { SubscriptionPaymentEntity } from "./entity/subscriptionPayment.entity";
 
 // Initialize TypeORM DataSource
 const AppDataSource = new DataSource({
@@ -12,7 +14,7 @@ const AppDataSource = new DataSource({
   password: process.env.POSTGRES_PASSWORD as string,
   database: process.env.POSTGRES_DATABASE as string,
   logging: true,
-  entities: [SubscriptionEntity , WalletEntity], 
+  entities: [SubscriptionEntity , WalletEntity , BookingPaymentEntity , SubscriptionPaymentEntity], 
   synchronize: process.env.NODE_ENV !== "production",
 });
 

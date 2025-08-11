@@ -6,8 +6,8 @@ export class UpdateWalletController {
   constructor(private updateWalletUseCase: IupdateWalletUseCase) {}
   update = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { id } = req.params;
-      const updateData = await this.updateWalletUseCase.execute(id, req.body);
+      const { id,name } = req.params;
+      const updateData = await this.updateWalletUseCase.execute(id,name, req.body);
       res.status(HttpStatusCode.OK).json({ updateData });
     } catch (error) {
       next(error);

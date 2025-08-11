@@ -8,9 +8,9 @@ import {
 
 export class UpdateWalletUseCase implements IupdateWalletUseCase {
   constructor(private walletRepo: IwalletRepository) {}
-  async execute(id: string, data: IwalletUpdateData): Promise<Wallet | null> {
+  async execute(id: string,  name:string , data: IwalletUpdateData): Promise<Wallet | null> {
     try {              
-      return await this.walletRepo.updateWallet(id, data);
+      return await this.walletRepo.updateWallet(id,name, data);
     } catch (error) {
       console.error("Error from fetchWalletUseCase :", error);
 

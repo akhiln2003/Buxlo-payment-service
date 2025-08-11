@@ -35,7 +35,8 @@ export class SubscriptionRepository implements IsubscriptionRepository {
       );
       throw new BadRequest(`Failed to update subscription: ${error.message}`);
     }
-  }
+  }  
+
 
   async getSubscriptionDetails(): Promise<Subscription[] | null> {
     try {

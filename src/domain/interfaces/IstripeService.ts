@@ -1,7 +1,8 @@
 export interface IStripeService {
   createCheckoutSession(
     amount: number,
-    mentorName: string,
-    slotId: string
-  ): Promise<string>;
+    name: string,
+    id:string,
+    type: "booking" | "subscription"
+  ): Promise<{url:string,id:string}>;
 }

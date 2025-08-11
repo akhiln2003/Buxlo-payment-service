@@ -3,6 +3,7 @@ import { Iserver } from "../../domain/interfaces/Iserver";
 import express from "express";
 import cookieParser from "cookie-parser";
 import { createServer } from "http";
+import { WebHookRouter } from "../../presentation/routes/WebhookRoutes";
 
 export class ExpressWebServer implements Iserver {
   private app: Application;
@@ -10,6 +11,11 @@ export class ExpressWebServer implements Iserver {
 
   constructor() {
     this.app = express();
+    this.app.use(
+      "/api/payment/stripe",
+      express.raw({ type: "application/json" }),
+      new WebHookRouter().getRouter()
+    );
     this.app.use(cookieParser());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(express.json());

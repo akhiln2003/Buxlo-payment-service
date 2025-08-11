@@ -19,7 +19,8 @@
     "typescript-eslint": "^8.32.1"
   },
   "dependencies": {
-    "@buxlo/common": "^1.0.90",
+    "@buxlo/common": "^1.0.94",
+    "@grpc/grpc-js": "^1.13.4",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",

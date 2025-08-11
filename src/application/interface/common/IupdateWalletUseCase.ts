@@ -5,5 +5,5 @@ export interface IwalletUpdateData{
     balance?:number
 }
 export interface IupdateWalletUseCase {
-  execute(id:string , data:IwalletUpdateData): Promise<Wallet | null>;
+  execute(id:string , name:string, data:IwalletUpdateData): Promise<Wallet | null>;
 }
