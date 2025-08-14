@@ -15,80 +15,80 @@ import { FetchOnePaymentController } from "../controllers/common/fetchOnePayment
 import { CreateSubscriptionCheckoutSessionController } from "../controllers/common/createSubscriptonCheckoutSessionController";
 
 export class CommonRouter {
-  private router: Router;
-  private diContainer: DIContainer;
+  private _router: Router;
+  private _diContainer: DIContainer;
 
-  private createWalletController!: CreateWalletController;
-  private fetchWalletController!: FetchWalletController;
-  private updateWalletController!: UpdateWalletController;
-  private fetchSubscriptionPlanController!: FetchSubscriptionPlanController;
-  private createCheckoutSessionController!: CreateCheckoutSessionController;
-  private createSubscriptonCheckoutSessionController!: CreateSubscriptionCheckoutSessionController;
-  private fetchOnePaymetController!: FetchOnePaymentController;
+  private _createWalletController!: CreateWalletController;
+  private _fetchWalletController!: FetchWalletController;
+  private _updateWalletController!: UpdateWalletController;
+  private _fetchSubscriptionPlanController!: FetchSubscriptionPlanController;
+  private _createCheckoutSessionController!: CreateCheckoutSessionController;
+  private _createSubscriptonCheckoutSessionController!: CreateSubscriptionCheckoutSessionController;
+  private _fetchOnePaymetController!: FetchOnePaymentController;
 
   constructor() {
-    this.router = Router();
-    this.diContainer = new DIContainer();
-    this.initializeControllers();
-    this.initializeRoutes();
+    this._router = Router();
+    this._diContainer = new DIContainer();
+    this._initializeControllers();
+    this._initializeRoutes();
   }
 
-  private initializeControllers(): void {
-    this.createWalletController = new CreateWalletController(
-      this.diContainer.createWalletUseCase()
+  private _initializeControllers(): void {
+    this._createWalletController = new CreateWalletController(
+      this._diContainer.createWalletUseCase()
     );
-    this.fetchWalletController = new FetchWalletController(
-      this.diContainer.fetchWalletUseCase()
+    this._fetchWalletController = new FetchWalletController(
+      this._diContainer.fetchWalletUseCase()
     );
-    this.updateWalletController = new UpdateWalletController(
-      this.diContainer.updateWalletUseCase()
+    this._updateWalletController = new UpdateWalletController(
+      this._diContainer.updateWalletUseCase()
     );
-    this.fetchSubscriptionPlanController = new FetchSubscriptionPlanController(
-      this.diContainer.fetchSubscriptionPlanUseCase()
+    this._fetchSubscriptionPlanController = new FetchSubscriptionPlanController(
+      this._diContainer.fetchSubscriptionPlanUseCase()
     );
 
-    this.createCheckoutSessionController = new CreateCheckoutSessionController(
-      this.diContainer.createBookingCheckoutSessionUseCase()
+    this._createCheckoutSessionController = new CreateCheckoutSessionController(
+      this._diContainer.createBookingCheckoutSessionUseCase()
     );
-    this.createSubscriptonCheckoutSessionController =
+    this._createSubscriptonCheckoutSessionController =
       new CreateSubscriptionCheckoutSessionController(
-        this.diContainer.createSubscriptionCheckoutSessionUseCase()
+        this._diContainer.createSubscriptionCheckoutSessionUseCase()
       );
-    this.fetchOnePaymetController = new FetchOnePaymentController(
-      this.diContainer.fetchOnePaymentUseCase()
+    this._fetchOnePaymetController = new FetchOnePaymentController(
+      this._diContainer.fetchOnePaymentUseCase()
     );
   }
 
-  private initializeRoutes(): void {
-    this.router.post("/createwallet", this.createWalletController.create);
-    this.router.get("/fetchwallet", this.fetchWalletController.fetch);
-    this.router.patch(
+  private _initializeRoutes(): void {
+    this._router.post("/createwallet", this._createWalletController.create);
+    this._router.get("/fetchwallet", this._fetchWalletController.fetch);
+    this._router.patch(
       "/updatewalletname/:id/:name",
-      this.updateWalletController.update
+      this._updateWalletController.update
     );
-    this.router.get(
+    this._router.get(
       "/fetchsubscriptionplan",
-      this.fetchSubscriptionPlanController.fetchData
+      this._fetchSubscriptionPlanController.fetchData
     );
-    this.router.post(
+    this._router.post(
       "/createbookingcheckoutsession/:userId/:type",
       validateReqParams(createCheckoutSessionParamsDto),
       validateReqBody(createCheckoutSessionBodyDto),
-      this.createCheckoutSessionController.create
+      this._createCheckoutSessionController.create
     );
-    this.router.post(
+    this._router.post(
       "/createsubscriptioncheckoutsession/:userId/:type",
       validateReqParams(createCheckoutSessionParamsDto),
-      this.createSubscriptonCheckoutSessionController.create
+      this._createSubscriptonCheckoutSessionController.create
     );
-    this.router.get(
+    this._router.get(
       "/fetchonepaymet/:id",
       validateReqParams(fetchOnePaymentDto),
-      this.fetchOnePaymetController.fetch
+      this._fetchOnePaymetController.fetch
     );
   }
 
   public getRouter(): Router {
-    return this.router;
+    return this._router;
   }
 }

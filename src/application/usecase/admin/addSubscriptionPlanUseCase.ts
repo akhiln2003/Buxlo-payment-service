@@ -4,12 +4,12 @@ import { IsubscriptionRepository } from "../../../domain/interfaces/Isubscriptio
 import { IaddSubscriptionPlanUseCase } from "../../interface/admin/IaddSubscriptionPlanUseCase";
 
 export class AddSubscriptionPlanUseCase implements IaddSubscriptionPlanUseCase {
-  constructor(private subscriptionRepository: IsubscriptionRepository) {}
+  constructor(private _subscriptionRepository: IsubscriptionRepository) {}
 
   async execute(data: Subscription[]): Promise<Subscription[] | null> {
     try {
       const createdSubscriptions = await Promise.all(
-        data.map((item) => this.subscriptionRepository.create(item))
+        data.map((item) => this._subscriptionRepository.create(item))
       );
       return createdSubscriptions;
     } catch (error) {

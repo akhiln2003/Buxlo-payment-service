@@ -4,44 +4,42 @@ import { UpdateSubscriptionPlanController } from "../controllers/admin/updateSub
 import { AddSubscriptionPlanController } from "../controllers/admin/addSubscriptionPlanController";
 
 export class AdminRouter {
-  private router: Router;
-  private diContainer: DIContainer;
+  private _router: Router;
+  private _diContainer: DIContainer;
 
-  private addSubscriptionPlanController!: AddSubscriptionPlanController;
-  private updateSubscriptionPlanController!: UpdateSubscriptionPlanController;
+  private _addSubscriptionPlanController!: AddSubscriptionPlanController;
+  private _updateSubscriptionPlanController!: UpdateSubscriptionPlanController;
 
   constructor() {
-    this.router = Router();
-    this.diContainer = new DIContainer();
-    this.initializeControllers();
-    this.initializeRoutes();
+    this._router = Router();
+    this._diContainer = new DIContainer();
+    this._initializeControllers();
+    this._initializeRoutes();
   }
 
-  private initializeControllers(): void {
-  
-
-    this.updateSubscriptionPlanController =
+  private _initializeControllers(): void {
+    this._updateSubscriptionPlanController =
       new UpdateSubscriptionPlanController(
-        this.diContainer.updateSubscriptionPlanUseCase()
+        this._diContainer.updateSubscriptionPlanUseCase()
       );
 
-    this.addSubscriptionPlanController = new AddSubscriptionPlanController(
-      this.diContainer.addSubscriptionPlanUseCase()
+    this._addSubscriptionPlanController = new AddSubscriptionPlanController(
+      this._diContainer.addSubscriptionPlanUseCase()
     );
   }
 
-  private initializeRoutes(): void {
-    this.router.post(
+  private _initializeRoutes(): void {
+    this._router.post(
       "/addsubscriptionplan",
-      this.addSubscriptionPlanController.create
+      this._addSubscriptionPlanController.create
     );
-    this.router.put(
+    this._router.put(
       "/updatesubscriptionplan",
-      this.updateSubscriptionPlanController.update
+      this._updateSubscriptionPlanController.update
     );
   }
 
   public getRouter(): Router {
-    return this.router;
+    return this._router;
   }
 }

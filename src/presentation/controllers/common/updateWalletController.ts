@@ -3,11 +3,15 @@ import { IupdateWalletUseCase } from "../../../application/interface/common/Iupd
 import HttpStatusCode from "@buxlo/common/build/common/httpStatusCode";
 
 export class UpdateWalletController {
-  constructor(private updateWalletUseCase: IupdateWalletUseCase) {}
+  constructor(private _updateWalletUseCase: IupdateWalletUseCase) {}
   update = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { id,name } = req.params;
-      const updateData = await this.updateWalletUseCase.execute(id,name, req.body);
+      const { id, name } = req.params;
+      const updateData = await this._updateWalletUseCase.execute(
+        id,
+        name,
+        req.body
+      );
       res.status(HttpStatusCode.OK).json({ updateData });
     } catch (error) {
       next(error);

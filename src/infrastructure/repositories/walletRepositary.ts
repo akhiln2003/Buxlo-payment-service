@@ -6,18 +6,18 @@ import { WalletEntity } from "../database/sql/entity/wallet.entity";
 import { Wallet } from "../../domain/entities/wallet";
 
 export class WalletRepository implements IwalletRepository {
-  private repository: Repository<WalletEntity>;
+  private _repository: Repository<WalletEntity>;
 
-  constructor(private manager?: EntityManager) {
-    const repoManager = this.manager || AppDataSource.manager;
-    this.repository = repoManager.getRepository(WalletEntity);
+  constructor(private _manager?: EntityManager) {
+    const repoManager = this._manager || AppDataSource.manager;
+    this._repository = repoManager.getRepository(WalletEntity);
   }
 
   async create(data: Wallet): Promise<Wallet> {
     try {
       // Create and save new wallet
-      const wallet = this.repository.create(data);
-      return await this.repository.save(wallet);
+      const wallet = this._repository.create(data);
+      return await this._repository.save(wallet);
     } catch (error: any) {
       throw new BadRequest(`Failed to create wallet: ${error.message}`);
     }
@@ -29,7 +29,7 @@ export class WalletRepository implements IwalletRepository {
   ): Promise<Wallet> {
     try {
 
-      const wallet = await this.repository.findOne({
+      const wallet = await this._repository.findOne({
         where: { userId, name },
       });
 
@@ -39,10 +39,10 @@ export class WalletRepository implements IwalletRepository {
         );
       }
 
-      await this.repository.update(wallet.id, data);
+      await this._repository.update(wallet.id, data);
       console.log("before update");
 
-      return await this.repository.findOneOrFail({
+      return await this._repository.findOneOrFail({
         where: { id: wallet.id },
       });
     } catch (error: any) {
@@ -53,7 +53,7 @@ export class WalletRepository implements IwalletRepository {
 
   async fetchWallet(userId: string): Promise<Wallet[] | null> {
     try {
-      return await this.repository.find({
+      return await this._repository.find({
         where: { userId: userId },
         order: {
           createdAt: "DESC",

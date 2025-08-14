@@ -4,13 +4,13 @@ import { IaddSubscriptionPlanUseCase } from "../../../application/interface/admi
 
 export class AddSubscriptionPlanController {
   constructor(
-    private addSubscriptionPlanUseCase: IaddSubscriptionPlanUseCase
+    private _addSubscriptionPlanUseCase: IaddSubscriptionPlanUseCase
   ) {}
 
   create = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const data = req.body;
-      const newPlans = await this.addSubscriptionPlanUseCase.execute(data);
+      const newPlans = await this._addSubscriptionPlanUseCase.execute(data);
       res.status(HttpStatusCode.OK).json({ newPlans });
     } catch (error) {
       next(error);

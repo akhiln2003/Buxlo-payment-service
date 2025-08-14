@@ -3,29 +3,29 @@ import { DIContainer } from "../../infrastructure/di/DIContainer";
 import { WebHookController } from "../controllers/webHook/weebHookController";
 
 export class WebHookRouter {
-  private router: Router;
-  private diContainer: DIContainer;
+  private _router: Router;
+  private _diContainer: DIContainer;
 
-  private webHookController!: WebHookController;
+  private _webHookController!: WebHookController;
 
   constructor() {
-    this.router = Router();
-    this.diContainer = new DIContainer();
-    this.initializeControllers();
-    this.initializeRoutes();
+    this._router = Router();
+    this._diContainer = new DIContainer();
+    this._initializeControllers();
+    this._initializeRoutes();
   }
 
-  private initializeControllers(): void {
-    this.webHookController = new WebHookController(
-      this.diContainer.webHookUseCase()
+  private _initializeControllers(): void {
+    this._webHookController = new WebHookController(
+      this._diContainer.webHookUseCase()
     );
   }
 
-  private initializeRoutes(): void {
-    this.router.post("/webhook", this.webHookController.webHook);
+  private _initializeRoutes(): void {
+    this._router.post("/webhook", this._webHookController.webHook);
   }
 
   public getRouter(): Router {
-    return this.router;
+    return this._router;
   }
 }

@@ -7,13 +7,13 @@ import {
 
 export class UpdateSubscriptionPlanController {
   constructor(
-    private updateSubscriptionPlanUseCase: IupdateSubscriptionPlanUseCase
+    private _updateSubscriptionPlanUseCase: IupdateSubscriptionPlanUseCase
   ) {}
   update = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { data } = req.body;
 
-      const updatedData = await this.updateSubscriptionPlanUseCase.execute(
+      const updatedData = await this._updateSubscriptionPlanUseCase.execute(
         data.id,
         data.updatedData as IsubscriptionPlanData
       );

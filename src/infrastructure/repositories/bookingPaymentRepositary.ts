@@ -7,16 +7,16 @@ import { Payment } from "../../domain/entities/bookingPaymentEntites";
 import { PaymentStatus } from "../@types/enums/paymentStatus";
 
 export class BookingPaymentRepository implements IpaymetRepository {
-  private repository: Repository<BookingPaymentEntity>;
+  private _repository: Repository<BookingPaymentEntity>;
 
-  constructor(private manager?: EntityManager) {
-    const repoManager = this.manager || AppDataSource.manager;
-    this.repository = repoManager.getRepository(BookingPaymentEntity);
+  constructor(private _manager?: EntityManager) {
+    const repoManager = this._manager || AppDataSource.manager;
+    this._repository = repoManager.getRepository(BookingPaymentEntity);
   }
 
   async create(data: Payment): Promise<Payment | boolean> {
     try {
-      const existingPayment = await this.repository.findOne({
+      const existingPayment = await this._repository.findOne({
         where: {
           userId: data.userId,
           status: PaymentStatus.PENDING,
@@ -26,8 +26,8 @@ export class BookingPaymentRepository implements IpaymetRepository {
       if (existingPayment) {
         return false;
       }
-      const newPaymentEntity = this.repository.create(data);
-      const savedEntity = await this.repository.save(newPaymentEntity);
+      const newPaymentEntity = this._repository.create(data);
+      const savedEntity = await this._repository.save(newPaymentEntity);
 
       return new Payment(
         savedEntity.amount,
@@ -47,14 +47,14 @@ export class BookingPaymentRepository implements IpaymetRepository {
 
   async update(paymentId: string, data: Partial<Payment>): Promise<Payment> {
     try {
-      const paymentEntity = await this.repository.findOneBy({ paymentId });
+      const paymentEntity = await this._repository.findOneBy({ paymentId });
 
       if (!paymentEntity) {
         throw new BadRequest("Payment not found");
       }
 
-      const updatedPaymentEntity = this.repository.merge(paymentEntity, data);
-      const savedEntity = await this.repository.save(updatedPaymentEntity);
+      const updatedPaymentEntity = this._repository.merge(paymentEntity, data);
+      const savedEntity = await this._repository.save(updatedPaymentEntity);
 
       return new Payment(
         savedEntity.amount,
@@ -76,7 +76,7 @@ export class BookingPaymentRepository implements IpaymetRepository {
 
   async findOne(slotId: string): Promise<Payment> {
     try {
-      const paymentEntity = await this.repository.findOneBy({ slotId });
+      const paymentEntity = await this._repository.findOneBy({ slotId });
 
       if (!paymentEntity) {
         throw new BadRequest("Payment not found");
@@ -101,7 +101,7 @@ export class BookingPaymentRepository implements IpaymetRepository {
   async findAll(id: string, role: "user" | "mentor"): Promise<Payment[]> {
     try {
       if (role == "user") {
-        const paymentEntities = await this.repository.find({
+        const paymentEntities = await this._repository.find({
           where: { userId: id },
           order: { transactionDate: "DESC" },
         });
@@ -124,7 +124,7 @@ export class BookingPaymentRepository implements IpaymetRepository {
             )
         );
       } else {
-        const paymentEntities = await this.repository.find({
+        const paymentEntities = await this._repository.find({
           where: { mentorId: id },
           order: { transactionDate: "DESC" },
         });

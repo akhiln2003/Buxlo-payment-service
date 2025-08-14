@@ -6,35 +6,35 @@ import { createServer } from "http";
 import { WebHookRouter } from "../../presentation/routes/WebhookRoutes";
 
 export class ExpressWebServer implements Iserver {
-  private app: Application;
-  private server: any;
+  private _app: Application;
+  private _server: any;
 
   constructor() {
-    this.app = express();
-    this.app.use(
+    this._app = express();
+    this._app.use(
       "/api/payment/stripe",
       express.raw({ type: "application/json" }),
       new WebHookRouter().getRouter()
     );
-    this.app.use(cookieParser());
-    this.app.use(express.urlencoded({ extended: true }));
-    this.app.use(express.json());
+    this._app.use(cookieParser());
+    this._app.use(express.urlencoded({ extended: true }));
+    this._app.use(express.json());
 
-    this.server = createServer(this.app);
+    this._server = createServer(this._app);
   }
   registerMiddleware(middleware: any): void {
-    this.app.use(middleware);
+    this._app.use(middleware);
   }
   registerRoutes(path: string, router: any): void {
-    this.app.use(path, router);
+    this._app.use(path, router);
   }
 
   registerErrorHandler(middleware: any): void {
-    this.app.use(middleware);
+    this._app.use(middleware);
   }
   async start(port: number): Promise<void> {
     return new Promise((res) => {
-      this.server.listen(port, () => {
+      this._server.listen(port, () => {
         console.log(`App listening on port ===> http://localhost:${port}/`);
         res();
       });
@@ -42,9 +42,9 @@ export class ExpressWebServer implements Iserver {
   }
 
   async close(): Promise<void> {
-    if (this.server) {
+    if (this._server) {
       return new Promise((resolve, reject) => {
-        this.server.close((err: any) => {
+        this._server.close((err: any) => {
           if (err) {
             console.error("Error closing", err);
             return reject(err);

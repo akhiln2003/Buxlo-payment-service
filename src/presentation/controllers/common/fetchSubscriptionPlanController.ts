@@ -4,11 +4,11 @@ import { IfetchSubscriptionPlanUseCase } from "../../../application/interface/co
 
 export class FetchSubscriptionPlanController {
   constructor(
-    private fetchSubscriptionPlanUseCase: IfetchSubscriptionPlanUseCase
+    private _fetchSubscriptionPlanUseCase: IfetchSubscriptionPlanUseCase
   ) {}
   fetchData = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const data = await this.fetchSubscriptionPlanUseCase.execute();
+      const data = await this._fetchSubscriptionPlanUseCase.execute();
 
       res.status(HttpStatusCode.OK).json({ data });
     } catch (error) {

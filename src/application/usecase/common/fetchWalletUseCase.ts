@@ -4,10 +4,10 @@ import { IwalletRepository } from "../../../domain/interfaces/IwalletRepository"
 import { IfetchWalletUseCase } from "../../interface/common/IfetchWalletUseCase";
 
 export class FetchWalletUseCase implements IfetchWalletUseCase {
-  constructor(private walletRepo: IwalletRepository) {}
+  constructor(private _walletRepo: IwalletRepository) {}
   async execute(id: string): Promise<Wallet[] | null> {
     try {
-      return await this.walletRepo.fetchWallet(id);
+      return await this._walletRepo.fetchWallet(id);
     } catch (error) {
       console.error("Error from fetchWalletUseCase :", error);
 

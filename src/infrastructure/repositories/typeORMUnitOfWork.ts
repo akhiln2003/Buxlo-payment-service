@@ -5,7 +5,7 @@ import { WalletRepository } from "../repositories/walletRepositary";
 import { IunitOfWork } from "../../domain/entities/IunitOfWork";
 
 export class TypeORMUnitOfWork implements IunitOfWork {
-  constructor(private manager?: EntityManager) {}
+  constructor(private _manager?: EntityManager) {}
 
   async withTransaction<T>(work: (uow: IunitOfWork) => Promise<T>): Promise<T> {
     return AppDataSource.transaction(async (transactionManager) => {
@@ -15,10 +15,10 @@ export class TypeORMUnitOfWork implements IunitOfWork {
   }
 
   getPaymentRepository(): BookingPaymentRepository {
-    return new BookingPaymentRepository(this.manager);
+    return new BookingPaymentRepository(this._manager);
   }
 
   getWalletRepository(): WalletRepository {
-    return new WalletRepository(this.manager);
+    return new WalletRepository(this._manager);
   }
 }

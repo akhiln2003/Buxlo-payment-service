@@ -10,41 +10,41 @@ import {
 import { messageBroker } from "./infrastructure/MessageBroker/config";
 
 export class App {
-  constructor(private server: Iserver) {}
+  constructor(private _server: Iserver) {}
 
   async initialize(): Promise<void> {
     await this.connectKafka();
-    await this.connectDB();
-    this.registerMiddleware();
-    this.registerRoutes();
-    this.registerErrorHandler();
+    await this._connectDB();
+    this._registerMiddleware();
+    this._registerRoutes();
+    this._registerErrorHandler();
   }
 
-  private registerMiddleware(): void {
-    this.server.registerMiddleware(loggerMiddleware);
+  private _registerMiddleware(): void {
+    this._server.registerMiddleware(loggerMiddleware);
   }
-  private registerRoutes(): void {
+  private _registerRoutes(): void {
     const adminRoutes = new AdminRouter().getRouter();
     const commonRoutes = new CommonRouter().getRouter();
 
-    this.server.registerRoutes("/api/payment/admin", adminRoutes);
-    this.server.registerRoutes("/api/payment/common", commonRoutes);
+    this._server.registerRoutes("/api/payment/admin", adminRoutes);
+    this._server.registerRoutes("/api/payment/common", commonRoutes);
   }
 
-  private registerErrorHandler(): void {
-    this.server.registerErrorHandler(errorHandler as any);
+  private _registerErrorHandler(): void {
+    this._server.registerErrorHandler(errorHandler as any);
   }
 
   async start(port: number): Promise<void> {
-    await this.server.start(port);
+    await this._server.start(port);
   }
 
-  async shutdown(): Promise<void> {
+  async _shutdown(): Promise<void> {
     await disconnectDB();
     await messageBroker.disconnect();
     console.log("Shut dow server");
   }
-  private async connectDB() {
+  private async _connectDB() {
     try {
       await connectDB();
     } catch (error) {

@@ -11,9 +11,9 @@ export class CreateSubscriptionCheckoutSessionUseCase
   implements IcreateSubscriptionCheckoutSessionUseCase
 {
   constructor(
-    private stripeService: IStripeService,
-    private paymentRepo: IsubscriptionPaymentRepository,
-    private walletRepository: IwalletRepository
+    private _stripeService: IStripeService,
+    private _paymentRepo: IsubscriptionPaymentRepository,
+    private _walletRepository: IwalletRepository
   ) {}
   async execute(
     data: Subscription,
@@ -24,7 +24,7 @@ export class CreateSubscriptionCheckoutSessionUseCase
       ? Number(data.price) - (Number(data.price) * Number(data.offer)) / 100
       : Number(data.price);
 
-    const session = await this.stripeService.createCheckoutSession(
+    const session = await this._stripeService.createCheckoutSession(
       amount,
       data.type,
       data.id as string,
@@ -38,8 +38,8 @@ export class CreateSubscriptionCheckoutSessionUseCase
       paymentId: session.id,
     };
 
-    const payment = await this.paymentRepo.create(newPayment);
-    await this.walletRepository.updateWallet(process.env.ADMIN_ID!, "Admin", {
+    const payment = await this._paymentRepo.create(newPayment);
+    await this._walletRepository.updateWallet(process.env.ADMIN_ID!, "Admin", {
       balance: amount,
     });
 

@@ -9,14 +9,13 @@ import { IsubscriptionRepository } from "../../../domain/interfaces/Isubscriptio
 export class UpdateSubscriptionPlanUseCase
   implements IupdateSubscriptionPlanUseCase
 {
-  constructor(private subscriptionPlanRepository: IsubscriptionRepository) {}
+  constructor(private _subscriptionPlanRepository: IsubscriptionRepository) {}
   async execute(
     id: string,
     updatedData: IsubscriptionPlanData
   ): Promise<any | Subscription> {
     try {
-      
-      const data = await this.subscriptionPlanRepository.update(
+      const data = await this._subscriptionPlanRepository.update(
         id,
         updatedData
       );

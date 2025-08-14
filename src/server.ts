@@ -20,7 +20,7 @@ app.initialize().then(()=>{
 const shutdownHandler = async () =>{
     console.log('reviced shutdown signal');
     try {
-        await app.shutdown();
+        await app._shutdown();
         await server.close();
         process.exit(0);
     } catch (err) {

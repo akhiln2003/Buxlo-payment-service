@@ -11,19 +11,19 @@ export class CreateBookingCheckoutSessionUseCase
   implements IcreateBookingCheckoutSessionUseCase
 {
   constructor(
-    private stripeService: IStripeService,
-    private paymentRepo: IpaymetRepository
+    private _stripeService: IStripeService,
+    private _paymentRepo: IpaymetRepository
   ) {}
   async execute(
     data: IcreateCheckoutSessionUseCaseDataProps,
     userId: string,
     type: "booking" | "subscription"
   ): Promise<string> {
-    const session = await this.stripeService.createCheckoutSession(
+    const session = await this._stripeService.createCheckoutSession(
       data.salary,
       data.name,
       data.id as string,
-      type 
+      type
     );
     const newPayment = {
       amount: data.salary,
@@ -33,7 +33,7 @@ export class CreateBookingCheckoutSessionUseCase
       status: PaymentStatus.PENDING,
       paymentId: session.id,
     };
-    const payment = await this.paymentRepo.create(newPayment);
+    const payment = await this._paymentRepo.create(newPayment);
 
     if (!payment || typeof payment === "boolean") {
       throw new BadRequest(
