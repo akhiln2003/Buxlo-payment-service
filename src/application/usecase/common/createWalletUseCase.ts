@@ -2,10 +2,11 @@ import { BadRequest } from "@buxlo/common";
 import { Wallet } from "../../../domain/entities/wallet";
 import { IwalletRepository } from "../../../domain/interfaces/IwalletRepository";
 import { IcreateWalletUseCase } from "../../interface/common/IcreateWalletUseCase";
+import { WalletResponseDto } from "../../../zodSchemaDto/output/walletResponse.dto";
 
 export class CreateWalletUseCase implements IcreateWalletUseCase {
   constructor(private _walletRepo: IwalletRepository) {}
-  async execute(data: Wallet): Promise<Wallet> {
+  async execute(data: Wallet): Promise<WalletResponseDto> {
     try {
       return await this._walletRepo.create(data);
     } catch (error) {

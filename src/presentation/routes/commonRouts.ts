@@ -6,13 +6,13 @@ import { CreateWalletController } from "../controllers/common/createWalletContro
 import { FetchSubscriptionPlanController } from "../controllers/common/fetchSubscriptionPlanController";
 import { CreateCheckoutSessionController } from "../controllers/common/createBookingCheckoutSessionController";
 import { validateReqBody, validateReqParams } from "@buxlo/common";
+import { FetchOnePaymentController } from "../controllers/common/fetchOnePaymentController";
+import { CreateSubscriptionCheckoutSessionController } from "../controllers/common/createSubscriptonCheckoutSessionController";
 import {
   createCheckoutSessionBodyDto,
   createCheckoutSessionParamsDto,
-} from "../../zodSchemaDto/common/createCheckoutSession.dto";
-import { fetchOnePaymentDto } from "../../zodSchemaDto/common/fetchOnePaymet.dto";
-import { FetchOnePaymentController } from "../controllers/common/fetchOnePaymentController";
-import { CreateSubscriptionCheckoutSessionController } from "../controllers/common/createSubscriptonCheckoutSessionController";
+} from "../../zodSchemaDto/input/common/createCheckoutSession.dto";
+import { fetchOnePaymentDto } from "../../zodSchemaDto/input/common/fetchOnePaymet.dto";
 
 export class CommonRouter {
   private _router: Router;

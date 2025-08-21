@@ -39,9 +39,14 @@ export class CreateSubscriptionCheckoutSessionUseCase
     };
 
     const payment = await this._paymentRepo.create(newPayment);
-    await this._walletRepository.updateWallet(process.env.ADMIN_ID!, "Admin", {
-      balance: amount,
-    });
+
+    await this._walletRepository.updateWallet(
+      process.env.ADMIN_ID!,
+      "Primary",
+      {
+        balance: amount,
+      }
+    );
 
     if (!payment || typeof payment === "boolean") {
       throw new BadRequest(

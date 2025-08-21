@@ -1,5 +1,5 @@
-import { Subscription } from "../../../domain/entities/subscription";
+import { SubscriptionResponseDto } from "../../../zodSchemaDto/output/subscriptionResponse.dto";
 
-export interface IfetchSubscriptionPlanUseCase{
-    execute(): Promise<Subscription[]| null>;
-  }
+export interface IfetchSubscriptionPlanUseCase {
+  execute(): Promise<SubscriptionResponseDto[]>;
+}

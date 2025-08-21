@@ -4,8 +4,10 @@ import { AppDataSource } from "../database/sql/connection";
 import { SubscriptionPaymentEntity } from "../database/sql/entity/subscriptionPayment.entity";
 import { IsubscriptionPaymentRepository } from "../../domain/interfaces/IsubscriptionPaymentRepository";
 import { SubscriptionPayment } from "../../domain/entities/subscriptionPaymentEntity";
-import { SubscriptionPlan } from "../@types/enums/subscriptionPlanType";
-import { PaymentStatus } from "../@types/enums/paymentStatus";
+import {
+  SubscriptionPaymentMapper,
+  SubscriptionPaymentResponseDto,
+} from "../../zodSchemaDto/output/subscriptionPaymentResponse.dto";
 
 export class SubscriptionPaymentRepository
   implements IsubscriptionPaymentRepository
@@ -19,21 +21,11 @@ export class SubscriptionPaymentRepository
 
   async create(
     data: SubscriptionPayment
-  ): Promise<SubscriptionPayment | boolean> {
+  ): Promise<SubscriptionPaymentResponseDto | boolean> {
     try {
       const newPaymentEntity = this._repository.create(data);
       const savedEntity = await this._repository.save(newPaymentEntity);
-
-      return new SubscriptionPayment(
-        savedEntity.amount,
-        savedEntity.userId,
-        savedEntity.type as SubscriptionPlan,
-        savedEntity.status as PaymentStatus,
-        savedEntity.paymentId,
-        savedEntity.id,
-        savedEntity.transactionDate,
-        savedEntity.updatedAt
-      );
+      return SubscriptionPaymentMapper.toDto(savedEntity);
     } catch (error: any) {
       throw new BadRequest(
         `Failed to create subscription payment: ${error.message}`

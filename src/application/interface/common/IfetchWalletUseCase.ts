@@ -1,5 +1,5 @@
-import { Wallet } from "../../../domain/entities/wallet";
+import { WalletResponseDto } from "../../../zodSchemaDto/output/walletResponse.dto";
 
 export interface IfetchWalletUseCase {
-  execute(id:string): Promise<Wallet[] | null>;
+  execute(id: string): Promise<WalletResponseDto[]>;
 }

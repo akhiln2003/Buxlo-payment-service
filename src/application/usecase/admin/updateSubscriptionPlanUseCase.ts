@@ -3,8 +3,8 @@ import {
   IsubscriptionPlanData,
   IupdateSubscriptionPlanUseCase,
 } from "../../interface/admin/updateSubscriptionPlanUseCase";
-import { Subscription } from "../../../domain/entities/subscription";
 import { IsubscriptionRepository } from "../../../domain/interfaces/IsubscriptionRepository";
+import { SubscriptionResponseDto } from "../../../zodSchemaDto/output/subscriptionResponse.dto";
 
 export class UpdateSubscriptionPlanUseCase
   implements IupdateSubscriptionPlanUseCase
@@ -13,7 +13,7 @@ export class UpdateSubscriptionPlanUseCase
   async execute(
     id: string,
     updatedData: IsubscriptionPlanData
-  ): Promise<any | Subscription> {
+  ): Promise<SubscriptionResponseDto> {
     try {
       const data = await this._subscriptionPlanRepository.update(
         id,

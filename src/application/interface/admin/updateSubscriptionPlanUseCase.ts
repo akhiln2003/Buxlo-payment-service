@@ -1,12 +1,12 @@
-import { Subscription } from "../../../domain/entities/subscription";
+import { SubscriptionResponseDto } from "../../../zodSchemaDto/output/subscriptionResponse.dto";
 
 export interface IsubscriptionPlanData {
-  offer:number
+  offer: number;
 }
 
 export interface IupdateSubscriptionPlanUseCase {
   execute(
     id: string,
-    updatedData: IsubscriptionPlanData,
-  ): Promise<any | Subscription>;
+    updatedData: IsubscriptionPlanData
+  ): Promise<SubscriptionResponseDto>;
 }

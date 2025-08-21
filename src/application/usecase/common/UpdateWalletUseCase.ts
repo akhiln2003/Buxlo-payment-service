@@ -1,10 +1,10 @@
 import { BadRequest } from "@buxlo/common";
-import { Wallet } from "../../../domain/entities/wallet";
 import { IwalletRepository } from "../../../domain/interfaces/IwalletRepository";
 import {
   IupdateWalletUseCase,
   IwalletUpdateData,
 } from "../../interface/common/IupdateWalletUseCase";
+import { WalletResponseDto } from "../../../zodSchemaDto/output/walletResponse.dto";
 
 export class UpdateWalletUseCase implements IupdateWalletUseCase {
   constructor(private _walletRepo: IwalletRepository) {}
@@ -12,7 +12,7 @@ export class UpdateWalletUseCase implements IupdateWalletUseCase {
     id: string,
     name: string,
     data: IwalletUpdateData
-  ): Promise<Wallet | null> {
+  ): Promise<WalletResponseDto> {
     try {
       return await this._walletRepo.updateWallet(id, name, data);
     } catch (error) {

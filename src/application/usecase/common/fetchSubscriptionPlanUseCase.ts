@@ -1,5 +1,5 @@
-import { Subscription } from "../../../domain/entities/subscription";
 import { IsubscriptionRepository } from "../../../domain/interfaces/IsubscriptionRepository";
+import { SubscriptionResponseDto } from "../../../zodSchemaDto/output/subscriptionResponse.dto";
 import { IfetchSubscriptionPlanUseCase } from "../../interface/common/IfetchSubscriptionPlanUseCase";
 
 export class FetchSubscriptionPlanUseCase
@@ -7,7 +7,7 @@ export class FetchSubscriptionPlanUseCase
 {
   constructor(private _subscriptionRepository: IsubscriptionRepository) {}
 
-  async execute(): Promise<Subscription[] | null> {
+  async execute(): Promise<SubscriptionResponseDto[]> {
     return await this._subscriptionRepository.getSubscriptionDetails();
   }
 }
