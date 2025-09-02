@@ -19,6 +19,7 @@ export class CreateBookingCheckoutSessionUseCase
     userId: string,
     type: "booking" | "subscription"
   ): Promise<string> {
+    await this._paymentRepo.checkSlotExixt(data.id as string);
     const session = await this._stripeService.createCheckoutSession(
       data.salary,
       data.name,

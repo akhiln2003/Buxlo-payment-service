@@ -26,13 +26,18 @@ export class SubscriptionPaymentEntity {
     type: "enum",
     enum: SubscriptionPlan,
   })
-  type: string;
+  type: SubscriptionPlan;
 
   @Column({
     type: "enum",
     enum: PaymentStatus,
   })
-  status: string;
+  status: PaymentStatus;
+
+  @Column({
+    type: "varchar",
+  })
+  subscriptionId: string;
 
   @Column({ unique: true })
   paymentId: string;

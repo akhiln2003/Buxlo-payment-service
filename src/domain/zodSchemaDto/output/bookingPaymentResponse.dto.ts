@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { BookingPaymentEntity } from "../../infrastructure/database/sql/entity/bookingPayment.entity";
+import { Payment } from "../../entities/bookingPaymentEntites";
 
 export const BookingPaymentResponseDto = z.object({
   id: z.string().uuid(),
@@ -18,7 +18,7 @@ export type BookingPaymentResponseDto = z.infer<
 >;
 
 export class BookingPaymentMapper {
-  static toDto(payment: BookingPaymentEntity): BookingPaymentResponseDto {
+  static toDto(payment: Payment): BookingPaymentResponseDto {
     return BookingPaymentResponseDto.parse({
       id: payment.id,
       userId: payment.userId,
@@ -27,7 +27,7 @@ export class BookingPaymentMapper {
       status: payment.status,
       paymentId: payment.paymentId,
       slotId: payment.slotId,
-      transactionDate: new Date(payment.transactionDate),
+      transactionDate: new Date(payment.transactionDate as Date),
       updatedAt: payment.updatedAt ? new Date(payment.updatedAt) : null,
     });
   }

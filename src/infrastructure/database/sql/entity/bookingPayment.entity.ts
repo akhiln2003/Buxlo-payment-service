@@ -31,7 +31,7 @@ export class BookingPaymentEntity {
     type: "enum",
     enum: PaymentStatus,
   })
-  status: string;
+  status: PaymentStatus;
 
   @Column({ unique: true  })
   paymentId: string;

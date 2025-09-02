@@ -1,4 +1,4 @@
-import { WalletResponseDto } from "../../../zodSchemaDto/output/walletResponse.dto";
+import { WalletResponseDto } from "../../../domain/zodSchemaDto/output/walletResponse.dto";
 
 export interface IwalletUpdateData {
   name?: string;

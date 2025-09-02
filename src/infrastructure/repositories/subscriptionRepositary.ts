@@ -4,10 +4,6 @@ import { Subscription } from "../../domain/entities/subscription";
 import { Repository } from "typeorm";
 import { SubscriptionEntity } from "../database/sql/entity/subscription.entity";
 import { AppDataSource } from "../database/sql/connection";
-import {
-  SubscriptionMapper,
-  SubscriptionResponseDto,
-} from "../../zodSchemaDto/output/subscriptionResponse.dto";
 
 export class SubscriptionRepository implements IsubscriptionRepository {
   private _repository: Repository<SubscriptionEntity>;
@@ -16,24 +12,19 @@ export class SubscriptionRepository implements IsubscriptionRepository {
     this._repository = AppDataSource.getRepository(SubscriptionEntity);
   }
 
-  async create(data: Subscription): Promise<SubscriptionResponseDto> {
+  async create(data: Subscription): Promise<Subscription> {
     try {
       const subscription = this._repository.create(data);
-      const saved = await this._repository.save(subscription);
-      return SubscriptionMapper.toDto(saved);
+      return await this._repository.save(subscription);
     } catch (error: any) {
       throw new BadRequest(`Failed to create subscription: ${error.message}`);
     }
   }
 
-  async update(
-    id: string,
-    data: Partial<Subscription>
-  ): Promise<SubscriptionResponseDto> {
+  async update(id: string, data: Partial<Subscription>): Promise<Subscription> {
     try {
       await this._repository.update(id, data);
-      const updated = await this._repository.findOneOrFail({ where: { id } });
-      return SubscriptionMapper.toDto(updated);
+      return await this._repository.findOneOrFail({ where: { id } });
     } catch (error: any) {
       console.error(
         "Error forom subscripton repository faild to update",
@@ -43,16 +34,30 @@ export class SubscriptionRepository implements IsubscriptionRepository {
     }
   }
 
-  async getSubscriptionDetails(): Promise<SubscriptionResponseDto[]> {
+  async getSubscriptionDetails(): Promise<Subscription[]> {
     try {
-      const data = await this._repository.find();
-      return data.map((sub) => SubscriptionMapper.toDto(sub));
+      return await this._repository.find();
     } catch (error: any) {
       console.error(
         "Error from subscription repository faild to fetch ",
         error
       );
       throw new BadRequest(`Failed to fetch subscription: ${error.message}`);
+    }
+  }
+
+  async findById(id: string): Promise<Subscription> {
+    try {
+      const plan = await this._repository.findOneBy({ id });
+
+      if (!plan) {
+        throw new BadRequest("Subscription payment not found");
+      }
+      return plan;
+    } catch (error: any) {
+      throw new BadRequest(
+        `Failed to fetch subscription plan: ${error.message}`
+      );
     }
   }
 }

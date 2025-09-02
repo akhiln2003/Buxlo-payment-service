@@ -10,5 +10,5 @@ if (!stripeApiKey) {
 }
 
 export const stripe = new Stripe(stripeApiKey || "dummy_key_for_development", {
-  apiVersion: "2025-07-30.basil", 
+  apiVersion: process.env.STRIPE_API_VERSION as any, 
 });

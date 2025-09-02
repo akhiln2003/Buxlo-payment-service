@@ -2,7 +2,10 @@ import { InternalServerError } from "@buxlo/common";
 import { Subscription } from "../../../domain/entities/subscription";
 import { IsubscriptionRepository } from "../../../domain/interfaces/IsubscriptionRepository";
 import { IaddSubscriptionPlanUseCase } from "../../interface/admin/IaddSubscriptionPlanUseCase";
-import { SubscriptionResponseDto } from "../../../zodSchemaDto/output/subscriptionResponse.dto";
+import {
+  SubscriptionMapper,
+  SubscriptionResponseDto,
+} from "../../../domain/zodSchemaDto/output/subscriptionResponse.dto";
 
 export class AddSubscriptionPlanUseCase implements IaddSubscriptionPlanUseCase {
   constructor(private _subscriptionRepository: IsubscriptionRepository) {}
@@ -12,7 +15,7 @@ export class AddSubscriptionPlanUseCase implements IaddSubscriptionPlanUseCase {
       const createdSubscriptions = await Promise.all(
         data.map((item) => this._subscriptionRepository.create(item))
       );
-      return createdSubscriptions;
+      return createdSubscriptions.map((sub) => SubscriptionMapper.toDto(sub));
     } catch (error) {
       console.error("Error from AddSubscriptionPlanUseCase ", error);
       throw new InternalServerError();

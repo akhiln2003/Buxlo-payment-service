@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { SubscriptionPaymentEntity } from "../../infrastructure/database/sql/entity/subscriptionPayment.entity";
+import { SubscriptionPayment } from "../../entities/subscriptionPaymentEntity";
 
 export const SubscriptionPaymentResponseDto = z.object({
   id: z.string().uuid(),
@@ -8,6 +8,7 @@ export const SubscriptionPaymentResponseDto = z.object({
   type: z.enum(["Day", "Month", "Year"]),
   status: z.enum(["booked", "pending", "cancelled", "failed"]),
   paymentId: z.string(),
+  subscriptionId: z.string(),
   transactionDate: z.date(),
   updatedAt: z.date(),
 });
@@ -17,18 +18,17 @@ export type SubscriptionPaymentResponseDto = z.infer<
 >;
 
 export class SubscriptionPaymentMapper {
-  static toDto(
-    payment: SubscriptionPaymentEntity
-  ): SubscriptionPaymentResponseDto {
+  static toDto(payment: SubscriptionPayment): SubscriptionPaymentResponseDto {
     return SubscriptionPaymentResponseDto.parse({
       id: payment.id,
       userId: payment.userId?.toString(),
       amount: Number(payment.amount),
       type: payment.type,
       status: payment.status,
+      subscriptionId: payment.subscriptionId,
       paymentId: payment.paymentId,
-      transactionDate: new Date(payment.transactionDate),
-      updatedAt: new Date(payment.updatedAt),
+      transactionDate: new Date(payment.transactionDate as Date),
+      updatedAt: new Date(payment.updatedAt as Date),
     });
   }
 }

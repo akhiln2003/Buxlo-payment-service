@@ -8,11 +8,14 @@ import { CreateCheckoutSessionController } from "../controllers/common/createBoo
 import { validateReqBody, validateReqParams } from "@buxlo/common";
 import { FetchOnePaymentController } from "../controllers/common/fetchOnePaymentController";
 import { CreateSubscriptionCheckoutSessionController } from "../controllers/common/createSubscriptonCheckoutSessionController";
+import { UpdateBookingPaymetController } from "../controllers/common/updateBookingPaymetController";
+import { UpdateSubscriptionPaymetController } from "../controllers/common/updateSubscriptionPaymetController";
 import {
   createCheckoutSessionBodyDto,
   createCheckoutSessionParamsDto,
-} from "../../zodSchemaDto/input/common/createCheckoutSession.dto";
-import { fetchOnePaymentDto } from "../../zodSchemaDto/input/common/fetchOnePaymet.dto";
+} from "../../domain/zodSchemaDto/input/common/createCheckoutSession.dto";
+import { fetchOnePaymentDto } from "../../domain/zodSchemaDto/input/common/fetchOnePaymet.dto";
+import { updatePaymentDto } from "../../domain/zodSchemaDto/input/common/updatepaymet.dto";
 
 export class CommonRouter {
   private _router: Router;
@@ -25,6 +28,8 @@ export class CommonRouter {
   private _createCheckoutSessionController!: CreateCheckoutSessionController;
   private _createSubscriptonCheckoutSessionController!: CreateSubscriptionCheckoutSessionController;
   private _fetchOnePaymetController!: FetchOnePaymentController;
+  private _updateSubscriptionPaymetController!: UpdateSubscriptionPaymetController;
+  private _updateBookingPaymetController!: UpdateBookingPaymetController;
 
   constructor() {
     this._router = Router();
@@ -57,6 +62,14 @@ export class CommonRouter {
     this._fetchOnePaymetController = new FetchOnePaymentController(
       this._diContainer.fetchOnePaymentUseCase()
     );
+
+    this._updateSubscriptionPaymetController =
+      new UpdateSubscriptionPaymetController(
+        this._diContainer.updateSubscriptionPaymetUseCase()
+      );
+    this._updateBookingPaymetController = new UpdateBookingPaymetController(
+      this._diContainer.updateBookingPaymetUseCase()
+    );
   }
 
   private _initializeRoutes(): void {
@@ -85,6 +98,17 @@ export class CommonRouter {
       "/fetchonepaymet/:id",
       validateReqParams(fetchOnePaymentDto),
       this._fetchOnePaymetController.fetch
+    );
+
+    this._router.post(
+      "/updatesubscriptionpaymet/:id",
+      validateReqParams(updatePaymentDto),
+      this._updateSubscriptionPaymetController.update
+    );
+    this._router.post(
+      "/updatesubbookingpaymet/:id",
+      validateReqParams(updatePaymentDto),
+      this._updateBookingPaymetController.update
     );
   }
 

@@ -4,7 +4,10 @@ import {
   IupdateSubscriptionPlanUseCase,
 } from "../../interface/admin/updateSubscriptionPlanUseCase";
 import { IsubscriptionRepository } from "../../../domain/interfaces/IsubscriptionRepository";
-import { SubscriptionResponseDto } from "../../../zodSchemaDto/output/subscriptionResponse.dto";
+import {
+  SubscriptionMapper,
+  SubscriptionResponseDto,
+} from "../../../domain/zodSchemaDto/output/subscriptionResponse.dto";
 
 export class UpdateSubscriptionPlanUseCase
   implements IupdateSubscriptionPlanUseCase
@@ -20,7 +23,7 @@ export class UpdateSubscriptionPlanUseCase
         updatedData
       );
 
-      return data;
+      return SubscriptionMapper.toDto(data);
     } catch (error) {
       console.error(error);
       throw new InternalServerError();

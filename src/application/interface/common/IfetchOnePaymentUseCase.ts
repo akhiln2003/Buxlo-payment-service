@@ -1,5 +1,5 @@
-import { BookingPaymentResponseDto } from "../../../zodSchemaDto/output/bookingPaymentResponse.dto";
+import { BookingPaymentResponseDto } from "../../../domain/zodSchemaDto/output/bookingPaymentResponse.dto";
 
-export interface IfetchOnePaymentUseCase{
-    execute(slotId:string): Promise<BookingPaymentResponseDto>;
-  }
+export interface IfetchOnePaymentUseCase {
+  execute(slotId: string): Promise<BookingPaymentResponseDto>;
+}

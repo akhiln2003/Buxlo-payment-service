@@ -12,7 +12,7 @@ export class CreateSubscriptionCheckoutSessionUseCase
 {
   constructor(
     private _stripeService: IStripeService,
-    private _paymentRepo: IsubscriptionPaymentRepository,
+    private _subscriptionPaymentRepo: IsubscriptionPaymentRepository,
     private _walletRepository: IwalletRepository
   ) {}
   async execute(
@@ -34,11 +34,12 @@ export class CreateSubscriptionCheckoutSessionUseCase
       amount,
       userId: userId,
       type: data.type as SubscriptionPlan,
-      status: PaymentStatus.BOOKED,
+      status: PaymentStatus.PENDING,
       paymentId: session.id,
+      subscriptionId: data.id as string,
     };
 
-    const payment = await this._paymentRepo.create(newPayment);
+    const payment = await this._subscriptionPaymentRepo.create(newPayment);
 
     await this._walletRepository.updateWallet(
       process.env.ADMIN_ID!,

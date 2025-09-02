@@ -4,7 +4,10 @@ import {
   IupdateWalletUseCase,
   IwalletUpdateData,
 } from "../../interface/common/IupdateWalletUseCase";
-import { WalletResponseDto } from "../../../zodSchemaDto/output/walletResponse.dto";
+import {
+  WalletMapper,
+  WalletResponseDto,
+} from "../../../domain/zodSchemaDto/output/walletResponse.dto";
 
 export class UpdateWalletUseCase implements IupdateWalletUseCase {
   constructor(private _walletRepo: IwalletRepository) {}
@@ -14,7 +17,8 @@ export class UpdateWalletUseCase implements IupdateWalletUseCase {
     data: IwalletUpdateData
   ): Promise<WalletResponseDto> {
     try {
-      return await this._walletRepo.updateWallet(id, name, data);
+      const updatedData = await this._walletRepo.updateWallet(id, name, data);
+      return WalletMapper.toDto(updatedData);
     } catch (error) {
       console.error("Error from fetchWalletUseCase :", error);
 

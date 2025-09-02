@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { SubscriptionEntity } from "../../infrastructure/database/sql/entity/subscription.entity";
+import { Subscription } from "../../entities/subscription";
 
 export const SubscriptionResponseDto = z.object({
   id: z.string().uuid(),
@@ -13,7 +13,7 @@ export const SubscriptionResponseDto = z.object({
 export type SubscriptionResponseDto = z.infer<typeof SubscriptionResponseDto>;
 
 export class SubscriptionMapper {
-  static toDto(subscription: SubscriptionEntity): SubscriptionResponseDto {
+  static toDto(subscription: Subscription): SubscriptionResponseDto {
     return SubscriptionResponseDto.parse({
       id: subscription.id,
       price: Number(subscription.price),

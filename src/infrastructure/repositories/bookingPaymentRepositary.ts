@@ -5,10 +5,7 @@ import { IpaymetRepository } from "../../domain/interfaces/IpaymentRepository";
 import { BookingPaymentEntity } from "../database/sql/entity/bookingPayment.entity";
 import { Payment } from "../../domain/entities/bookingPaymentEntites";
 import { PaymentStatus } from "../@types/enums/paymentStatus";
-import {
-  BookingPaymentMapper,
-  BookingPaymentResponseDto,
-} from "../../zodSchemaDto/output/bookingPaymentResponse.dto";
+import { In } from "typeorm";
 
 export class BookingPaymentRepository implements IpaymetRepository {
   private _repository: Repository<BookingPaymentEntity>;
@@ -18,7 +15,7 @@ export class BookingPaymentRepository implements IpaymetRepository {
     this._repository = repoManager.getRepository(BookingPaymentEntity);
   }
 
-  async create(data: Payment): Promise<BookingPaymentResponseDto | boolean> {
+  async create(data: Payment): Promise<Payment | boolean> {
     try {
       const existingPayment = await this._repository.findOne({
         where: {
@@ -32,16 +29,14 @@ export class BookingPaymentRepository implements IpaymetRepository {
       }
       const newPaymentEntity = this._repository.create(data);
       const savedEntity = await this._repository.save(newPaymentEntity);
-      return BookingPaymentMapper.toDto(savedEntity);
+
+      return savedEntity;
     } catch (error: any) {
       throw new BadRequest(`Failed to create payment: ${error.message}`);
     }
   }
 
-  async update(
-    paymentId: string,
-    data: Partial<Payment>
-  ): Promise<BookingPaymentResponseDto> {
+  async update(paymentId: string, data: Partial<Payment>): Promise<Payment> {
     try {
       const paymentEntity = await this._repository.findOneBy({ paymentId });
 
@@ -50,17 +45,30 @@ export class BookingPaymentRepository implements IpaymetRepository {
       }
 
       const updatedPaymentEntity = this._repository.merge(paymentEntity, data);
-      const savedEntity = await this._repository.save(updatedPaymentEntity);
-
-      return BookingPaymentMapper.toDto(savedEntity);
+      return await this._repository.save(updatedPaymentEntity);
     } catch (error: any) {
-      console.error("");
+      throw new BadRequest(`Failed to update payment: ${error.message}`);
+    }
+  }
+  async findByIdAndUpdate(
+    id: string,
+    data: Partial<Payment>
+  ): Promise<Payment> {
+    try {
+      const paymentEntity = await this._repository.findOneBy({ id });
 
+      if (!paymentEntity) {
+        throw new BadRequest("Payment not found");
+      }
+
+      const updatedPaymentEntity = this._repository.merge(paymentEntity, data);
+      return await this._repository.save(updatedPaymentEntity);
+    } catch (error: any) {
       throw new BadRequest(`Failed to update payment: ${error.message}`);
     }
   }
 
-  async findOne(slotId: string): Promise<BookingPaymentResponseDto> {
+  async findOne(slotId: string): Promise<Payment> {
     try {
       const paymentEntity = await this._repository.findOneBy({ slotId });
 
@@ -68,16 +76,28 @@ export class BookingPaymentRepository implements IpaymetRepository {
         throw new BadRequest("Payment not found");
       }
 
-      return BookingPaymentMapper.toDto(paymentEntity);
+      return paymentEntity;
     } catch (error: any) {
       throw new BadRequest(`Failed to fetch payment: ${error.message}`);
     }
   }
 
-  async findAll(
-    id: string,
-    role: "user" | "mentor"
-  ): Promise<BookingPaymentResponseDto[]> {
+  async checkSlotExixt(slotId: string): Promise<null> {
+    try {
+      const paymentEntity = await this._repository.findOneBy({
+        slotId,
+        status: In([PaymentStatus.PENDING, PaymentStatus.BOOKED]),
+      });
+      if (paymentEntity)
+        throw new BadRequest("This slot is currently unavailable");
+
+      return null;
+    } catch (error: any) {
+      throw new BadRequest(`Failed to fetch payment: ${error.message}`);
+    }
+  }
+
+  async findAll(id: string, role: "user" | "mentor"): Promise<Payment[]> {
     try {
       if (role == "user") {
         const paymentEntities = await this._repository.find({
@@ -88,9 +108,7 @@ export class BookingPaymentRepository implements IpaymetRepository {
           return [];
         }
 
-        return paymentEntities.map((entity) =>
-          BookingPaymentMapper.toDto(entity)
-        );
+        return paymentEntities;
       } else {
         const paymentEntities = await this._repository.find({
           where: { mentorId: id },
@@ -99,10 +117,7 @@ export class BookingPaymentRepository implements IpaymetRepository {
         if (!paymentEntities.length) {
           return [];
         }
-
-        return paymentEntities.map((entity) =>
-          BookingPaymentMapper.toDto(entity)
-        );
+        return paymentEntities;
       }
     } catch (error: any) {
       throw new BadRequest(`Failed to fetch payments: ${error.message}`);

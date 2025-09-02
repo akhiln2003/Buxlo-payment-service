@@ -1,15 +1,20 @@
-import { BookingPaymentResponseDto } from "../../zodSchemaDto/output/bookingPaymentResponse.dto";
 import { Payment } from "../entities/bookingPaymentEntites";
 
 export interface IpaymetRepository {
-  create(data: Payment): Promise<BookingPaymentResponseDto | boolean>;
+  create(data: Payment): Promise<Payment | boolean>;
   update(
     paymentId: string,
     data: Partial<Payment>
-  ): Promise<BookingPaymentResponseDto>;
-  findOne(slotId: string): Promise<BookingPaymentResponseDto>;
+  ): Promise<Payment>;
+  findByIdAndUpdate(
+    id: string,
+    data: Partial<Payment>
+  ): Promise<Payment>;
+  findOne(slotId: string): Promise<Payment>;
+  checkSlotExixt(slotId: string): Promise<null>;
+
   findAll(
     id: string,
     role: "user" | "mentor"
-  ): Promise<BookingPaymentResponseDto[]>;
+  ): Promise<Payment[]>;
 }

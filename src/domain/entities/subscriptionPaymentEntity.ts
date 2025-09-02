@@ -8,6 +8,7 @@ export class SubscriptionPayment {
     public type: SubscriptionPlan,
     public status: PaymentStatus,
     public paymentId: string,
+    public subscriptionId: string,
     public id?: string,
     public transactionDate?: Date,
     public updatedAt?: Date

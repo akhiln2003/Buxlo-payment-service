@@ -1,11 +1,8 @@
-import { SubscriptionResponseDto } from "../../zodSchemaDto/output/subscriptionResponse.dto";
 import { Subscription } from "../entities/subscription";
 
 export interface IsubscriptionRepository {
-  create(data: Subscription): Promise<SubscriptionResponseDto>;
-  update(
-    id: string,
-    data: Partial<Subscription>
-  ): Promise<SubscriptionResponseDto>;
-  getSubscriptionDetails(): Promise<SubscriptionResponseDto[]>;
+  create(data: Subscription): Promise<Subscription>;
+  update(id: string, data: Partial<Subscription>): Promise<Subscription>;
+  getSubscriptionDetails(): Promise<Subscription[]>;
+  findById(id: string): Promise<Subscription>;
 }

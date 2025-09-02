@@ -25,6 +25,10 @@ import { FetchOnePaymentUseCase } from "../../application/usecase/common/fetchOn
 import { SubscriptionPaymentRepository } from "../repositories/subscriptionPaymentRepository";
 import { CreateSubscriptionCheckoutSessionUseCase } from "../../application/usecase/common/createSubscriptionCheckoutSessionUseCase";
 import { IcreateSubscriptionCheckoutSessionUseCase } from "../../application/interface/common/IcreateSubscriptionCheckoutSessionUseCase";
+import { IupdateBookingPaymetUseCase } from "../../application/interface/common/IupdateBookingPaymetUseCase";
+import { IupdateSubscriptionPaymetUseCase } from "../../application/interface/common/IupdateSubscriptionPaymetUseCase";
+import { UpdateBookingPaymetUseCase } from "../../application/usecase/common/updateBookingPaymetUseCase";
+import { UpdateSubscriptionPaymetUseCase } from "../../application/usecase/common/updateSubscriptionPaymetUseCase";
 
 export class DIContainer {
   private _subscriptionPlanRepository: SubscriptionRepository;
@@ -82,10 +86,24 @@ export class DIContainer {
   }
 
   webHookUseCase(): IwebHookUseCase {
-    return new WebHookUseCase(stripe, this._bookngPaymentRepository);
+    return new WebHookUseCase(
+      stripe,
+      this._bookngPaymentRepository,
+      this._subscriptionPaymentRepository,
+      this._subscriptionPlanRepository
+    );
   }
 
   fetchOnePaymentUseCase(): IfetchOnePaymentUseCase {
     return new FetchOnePaymentUseCase(this._bookngPaymentRepository);
+  }
+
+  updateBookingPaymetUseCase(): IupdateBookingPaymetUseCase {
+    return new UpdateBookingPaymetUseCase(this._bookngPaymentRepository);
+  }
+  updateSubscriptionPaymetUseCase(): IupdateSubscriptionPaymetUseCase {
+    return new UpdateSubscriptionPaymetUseCase(
+      this._subscriptionPaymentRepository
+    );
   }
 }
