@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import HttpStatusCode from "@buxlo/common/build/common/httpStatusCode";
-import { IfetchOnePaymentUseCase } from "../../../application/interface/common/IfetchOnePaymentUseCase";
+import { IFetchOnePaymentUseCase } from "../../../application/interface/common/IFetchOnePaymentUseCase";
 
 export class FetchOnePaymentController {
-  constructor(public fetchOnePaymentUseCase: IfetchOnePaymentUseCase) {}
+  constructor(public fetchOnePaymentUseCase: IFetchOnePaymentUseCase) {}
   fetch = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const payment = await this.fetchOnePaymentUseCase.execute(req.params.id);

@@ -1,20 +1,20 @@
 import { BadRequest } from "@buxlo/common";
 import { IwalletRepository } from "../../../domain/interfaces/IwalletRepository";
 import {
-  IupdateWalletUseCase,
-  IwalletUpdateData,
-} from "../../interface/common/IupdateWalletUseCase";
+  IUpdateWalletUseCase,
+  IWalletUpdateData,
+} from "../../interface/common/IUpdateWalletUseCase";
 import {
   WalletMapper,
   WalletResponseDto,
 } from "../../../domain/zodSchemaDto/output/walletResponse.dto";
 
-export class UpdateWalletUseCase implements IupdateWalletUseCase {
+export class UpdateWalletUseCase implements IUpdateWalletUseCase {
   constructor(private _walletRepo: IwalletRepository) {}
   async execute(
     id: string,
     name: string,
-    data: IwalletUpdateData
+    data: IWalletUpdateData
   ): Promise<WalletResponseDto> {
     try {
       const updatedData = await this._walletRepo.updateWallet(id, name, data);

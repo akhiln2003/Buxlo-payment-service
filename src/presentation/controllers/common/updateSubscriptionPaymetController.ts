@@ -1,10 +1,10 @@
 import HttpStatusCode from "@buxlo/common/build/common/httpStatusCode";
 import { NextFunction, Request, Response } from "express";
-import { IupdateSubscriptionPaymetUseCase } from "../../../application/interface/common/IupdateSubscriptionPaymetUseCase";
+import { IUpdateSubscriptionPaymetUseCase } from "../../../application/interface/common/IUpdateSubscriptionPaymetUseCase";
 
 export class UpdateSubscriptionPaymetController {
   constructor(
-    private _updateSubscriptionPaymetUseCase: IupdateSubscriptionPaymetUseCase
+    private _updateSubscriptionPaymetUseCase: IUpdateSubscriptionPaymetUseCase
   ) {}
   update = async (req: Request, res: Response, next: NextFunction) => {
     try {

@@ -1,12 +1,12 @@
 import { AvailabilityEntities } from "../../../domain/entities/availabilityEntities";
 
-export interface IcreateCheckoutSessionUseCaseDataProps
+export interface ICreateCheckoutSessionUseCaseDataProps
   extends AvailabilityEntities {
   name: string;
 }
-export interface IcreateBookingCheckoutSessionUseCase {
+export interface ICreateBookingCheckoutSessionUseCase {
   execute(
-    data: IcreateCheckoutSessionUseCaseDataProps,
+    data: ICreateCheckoutSessionUseCaseDataProps,
     userId: string,
     type: "booking" | "subscription"
   ): Promise<string>;

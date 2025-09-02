@@ -1,6 +1,6 @@
 import { BadRequest } from "@buxlo/common";
 import { IStripeService } from "../../../domain/interfaces/IstripeService";
-import { IcreateSubscriptionCheckoutSessionUseCase } from "../../interface/common/IcreateSubscriptionCheckoutSessionUseCase";
+import { ICreateSubscriptionCheckoutSessionUseCase } from "../../interface/common/ICreateSubscriptionCheckoutSessionUseCase";
 import { Subscription } from "../../../domain/entities/subscription";
 import { SubscriptionPlan } from "../../../infrastructure/@types/enums/subscriptionPlanType";
 import { IsubscriptionPaymentRepository } from "../../../domain/interfaces/IsubscriptionPaymentRepository";
@@ -8,7 +8,7 @@ import { PaymentStatus } from "../../../infrastructure/@types/enums/paymentStatu
 import { IwalletRepository } from "../../../domain/interfaces/IwalletRepository";
 
 export class CreateSubscriptionCheckoutSessionUseCase
-  implements IcreateSubscriptionCheckoutSessionUseCase
+  implements ICreateSubscriptionCheckoutSessionUseCase
 {
   constructor(
     private _stripeService: IStripeService,

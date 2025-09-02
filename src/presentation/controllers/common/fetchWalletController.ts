@@ -1,9 +1,9 @@
 import HttpStatusCode from "@buxlo/common/build/common/httpStatusCode";
 import { NextFunction, Request, Response } from "express";
-import { IfetchWalletUseCase } from "../../../application/interface/common/IfetchWalletUseCase";
+import { IFetchWalletUseCase } from "../../../application/interface/common/IFetchWalletUseCase";
 
 export class FetchWalletController {
-  constructor(private _fetchWalletUseCase: IfetchWalletUseCase) {}
+  constructor(private _fetchWalletUseCase: IFetchWalletUseCase) {}
   fetch = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.query;

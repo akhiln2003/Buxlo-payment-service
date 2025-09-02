@@ -1,13 +1,13 @@
 import { InternalServerError } from "@buxlo/common";
 import { Subscription } from "../../../domain/entities/subscription";
 import { IsubscriptionRepository } from "../../../domain/interfaces/IsubscriptionRepository";
-import { IaddSubscriptionPlanUseCase } from "../../interface/admin/IaddSubscriptionPlanUseCase";
+import { IAddSubscriptionPlanUseCase } from "../../interface/admin/IAddSubscriptionPlanUseCase";
 import {
   SubscriptionMapper,
   SubscriptionResponseDto,
 } from "../../../domain/zodSchemaDto/output/subscriptionResponse.dto";
 
-export class AddSubscriptionPlanUseCase implements IaddSubscriptionPlanUseCase {
+export class AddSubscriptionPlanUseCase implements IAddSubscriptionPlanUseCase {
   constructor(private _subscriptionRepository: IsubscriptionRepository) {}
 
   async execute(data: Subscription[]): Promise<SubscriptionResponseDto[]> {

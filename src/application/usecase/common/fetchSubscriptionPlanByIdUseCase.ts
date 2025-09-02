@@ -3,10 +3,10 @@ import {
   SubscriptionMapper,
   SubscriptionResponseDto,
 } from "../../../domain/zodSchemaDto/output/subscriptionResponse.dto";
-import { IfetchSubscriptionPlanByIdUseCase } from "../../interface/common/IfetchSubscriptionPlanByIdUseCase";
+import { IFetchSubscriptionPlanByIdUseCase } from "../../interface/common/IFetchSubscriptionPlanByIdUseCase";
 
 export class FetchSubscriptionPlanByIdUseCase
-  implements IfetchSubscriptionPlanByIdUseCase
+  implements IFetchSubscriptionPlanByIdUseCase
 {
   constructor(private _subscriptionRepository: IsubscriptionRepository) {}
 

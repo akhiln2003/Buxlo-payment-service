@@ -1,6 +1,6 @@
 import { errorHandler } from "@buxlo/common";
 import loggerMiddleware from "./presentation/middlewares/loggerMiddleware";
-import { Iserver } from "./domain/interfaces/Iserver";
+import { IServer } from "./domain/interfaces/IServer";
 import { AdminRouter } from "./presentation/routes/adminRouts";
 import { CommonRouter } from "./presentation/routes/commonRouts";
 import {
@@ -10,7 +10,7 @@ import {
 import { messageBroker } from "./infrastructure/MessageBroker/config";
 
 export class App {
-  constructor(private _server: Iserver) {}
+  constructor(private _server: IServer) {}
 
   async initialize(): Promise<void> {
     await this.connectKafka();

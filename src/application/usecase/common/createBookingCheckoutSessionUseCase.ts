@@ -3,19 +3,19 @@ import { IpaymetRepository } from "../../../domain/interfaces/IpaymentRepository
 import { IStripeService } from "../../../domain/interfaces/IstripeService";
 import { PaymentStatus } from "../../../infrastructure/@types/enums/paymentStatus";
 import {
-  IcreateBookingCheckoutSessionUseCase,
-  IcreateCheckoutSessionUseCaseDataProps,
-} from "../../interface/common/IcreateCheckoutSessionUseCase";
+  ICreateBookingCheckoutSessionUseCase,
+  ICreateCheckoutSessionUseCaseDataProps,
+} from "../../interface/common/ICreateCheckoutSessionUseCase";
 
 export class CreateBookingCheckoutSessionUseCase
-  implements IcreateBookingCheckoutSessionUseCase
+  implements ICreateBookingCheckoutSessionUseCase
 {
   constructor(
     private _stripeService: IStripeService,
     private _paymentRepo: IpaymetRepository
   ) {}
   async execute(
-    data: IcreateCheckoutSessionUseCaseDataProps,
+    data: ICreateCheckoutSessionUseCaseDataProps,
     userId: string,
     type: "booking" | "subscription"
   ): Promise<string> {

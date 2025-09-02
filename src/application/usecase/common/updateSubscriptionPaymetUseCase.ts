@@ -1,5 +1,5 @@
 import { PaymentStatus } from "../../../infrastructure/@types/enums/paymentStatus";
-import { IupdateSubscriptionPaymetUseCase } from "../../interface/common/IupdateSubscriptionPaymetUseCase";
+import { IUpdateSubscriptionPaymetUseCase } from "../../interface/common/IUpdateSubscriptionPaymetUseCase";
 import { IsubscriptionPaymentRepository } from "../../../domain/interfaces/IsubscriptionPaymentRepository";
 import {
   SubscriptionPaymentMapper,
@@ -7,7 +7,7 @@ import {
 } from "../../../domain/zodSchemaDto/output/subscriptionPaymentResponse.dto";
 
 export class UpdateSubscriptionPaymetUseCase
-  implements IupdateSubscriptionPaymetUseCase
+  implements IUpdateSubscriptionPaymetUseCase
 {
   constructor(
     private _subscriptionPaymentRepository: IsubscriptionPaymentRepository

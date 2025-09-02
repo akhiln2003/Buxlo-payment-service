@@ -1,12 +1,12 @@
 import { BadRequest } from "@buxlo/common";
-import { IfetchOnePaymentUseCase } from "../../interface/common/IfetchOnePaymentUseCase";
+import { IFetchOnePaymentUseCase } from "../../interface/common/IFetchOnePaymentUseCase";
 import { IpaymetRepository } from "../../../domain/interfaces/IpaymentRepository";
 import {
   BookingPaymentMapper,
   BookingPaymentResponseDto,
 } from "../../../domain/zodSchemaDto/output/bookingPaymentResponse.dto";
 
-export class FetchOnePaymentUseCase implements IfetchOnePaymentUseCase {
+export class FetchOnePaymentUseCase implements IFetchOnePaymentUseCase {
   constructor(private _paymetRepo: IpaymetRepository) {}
   async execute(slotId: string): Promise<BookingPaymentResponseDto> {
     try {

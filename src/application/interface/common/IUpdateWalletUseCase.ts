@@ -1,13 +1,13 @@
 import { WalletResponseDto } from "../../../domain/zodSchemaDto/output/walletResponse.dto";
 
-export interface IwalletUpdateData {
+export interface IWalletUpdateData {
   name?: string;
   balance?: number;
 }
-export interface IupdateWalletUseCase {
+export interface IUpdateWalletUseCase {
   execute(
     id: string,
     name: string,
-    data: IwalletUpdateData
+    data: IWalletUpdateData
   ): Promise<WalletResponseDto>;
 }

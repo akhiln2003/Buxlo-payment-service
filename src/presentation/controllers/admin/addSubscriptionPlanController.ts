@@ -1,10 +1,10 @@
 import HttpStatusCode from "@buxlo/common/build/common/httpStatusCode";
 import { NextFunction, Request, Response } from "express";
-import { IaddSubscriptionPlanUseCase } from "../../../application/interface/admin/IaddSubscriptionPlanUseCase";
+import { IAddSubscriptionPlanUseCase } from "../../../application/interface/admin/IAddSubscriptionPlanUseCase";
 
 export class AddSubscriptionPlanController {
   constructor(
-    private _addSubscriptionPlanUseCase: IaddSubscriptionPlanUseCase
+    private _addSubscriptionPlanUseCase: IAddSubscriptionPlanUseCase
   ) {}
 
   create = async (req: Request, res: Response, next: NextFunction) => {

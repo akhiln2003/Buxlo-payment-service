@@ -1,12 +1,12 @@
 import { BadRequest } from "@buxlo/common";
 import { IwalletRepository } from "../../../domain/interfaces/IwalletRepository";
-import { IfetchWalletUseCase } from "../../interface/common/IfetchWalletUseCase";
+import { IFetchWalletUseCase } from "../../interface/common/IFetchWalletUseCase";
 import {
   WalletMapper,
   WalletResponseDto,
 } from "../../../domain/zodSchemaDto/output/walletResponse.dto";
 
-export class FetchWalletUseCase implements IfetchWalletUseCase {
+export class FetchWalletUseCase implements IFetchWalletUseCase {
   constructor(private _walletRepo: IwalletRepository) {}
   async execute(id: string): Promise<WalletResponseDto[]> {
     try {

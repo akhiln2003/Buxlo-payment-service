@@ -1,4 +1,4 @@
-import { IupdateBookingPaymetUseCase } from "../../interface/common/IupdateBookingPaymetUseCase";
+import { IUpdateBookingPaymetUseCase } from "../../interface/common/IUpdateBookingPaymetUseCase";
 import { IpaymetRepository } from "../../../domain/interfaces/IpaymentRepository";
 import { PaymentStatus } from "../../../infrastructure/@types/enums/paymentStatus";
 import {
@@ -6,7 +6,7 @@ import {
   BookingPaymentResponseDto,
 } from "../../../domain/zodSchemaDto/output/bookingPaymentResponse.dto";
 
-export class UpdateBookingPaymetUseCase implements IupdateBookingPaymetUseCase {
+export class UpdateBookingPaymetUseCase implements IUpdateBookingPaymetUseCase {
   constructor(private _bookngPaymentRepository: IpaymetRepository) {}
   async execute(
     id: string,

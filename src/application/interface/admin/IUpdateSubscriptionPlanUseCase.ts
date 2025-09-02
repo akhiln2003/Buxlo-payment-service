@@ -1,12 +1,12 @@
 import { SubscriptionResponseDto } from "../../../domain/zodSchemaDto/output/subscriptionResponse.dto";
 
-export interface IsubscriptionPlanData {
+export interface ISubscriptionPlanData {
   offer: number;
 }
 
-export interface IupdateSubscriptionPlanUseCase {
+export interface IUpdateSubscriptionPlanUseCase {
   execute(
     id: string,
-    updatedData: IsubscriptionPlanData
+    updatedData: ISubscriptionPlanData
   ): Promise<SubscriptionResponseDto>;
 }

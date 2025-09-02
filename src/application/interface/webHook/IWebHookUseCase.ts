@@ -1,5 +1,5 @@
 
-export interface IwebHookUseCase {
+export interface IWebHookUseCase {
   execute(
     body: Buffer | string,
     sig: string | string[] | undefined,

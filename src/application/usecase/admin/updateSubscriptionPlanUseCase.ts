@@ -1,8 +1,8 @@
 import { InternalServerError } from "@buxlo/common";
 import {
-  IsubscriptionPlanData,
-  IupdateSubscriptionPlanUseCase,
-} from "../../interface/admin/updateSubscriptionPlanUseCase";
+  ISubscriptionPlanData,
+  IUpdateSubscriptionPlanUseCase,
+} from "../../interface/admin/IUpdateSubscriptionPlanUseCase";
 import { IsubscriptionRepository } from "../../../domain/interfaces/IsubscriptionRepository";
 import {
   SubscriptionMapper,
@@ -10,12 +10,12 @@ import {
 } from "../../../domain/zodSchemaDto/output/subscriptionResponse.dto";
 
 export class UpdateSubscriptionPlanUseCase
-  implements IupdateSubscriptionPlanUseCase
+  implements IUpdateSubscriptionPlanUseCase
 {
   constructor(private _subscriptionPlanRepository: IsubscriptionRepository) {}
   async execute(
     id: string,
-    updatedData: IsubscriptionPlanData
+    updatedData: ISubscriptionPlanData
   ): Promise<SubscriptionResponseDto> {
     try {
       const data = await this._subscriptionPlanRepository.update(

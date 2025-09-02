@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import HttpStatusCode from "@buxlo/common/build/common/httpStatusCode";
-import { IcreateSubscriptionCheckoutSessionUseCase } from "../../../application/interface/common/IcreateSubscriptionCheckoutSessionUseCase";
+import { ICreateSubscriptionCheckoutSessionUseCase } from "../../../application/interface/common/ICreateSubscriptionCheckoutSessionUseCase";
 
 export class CreateSubscriptionCheckoutSessionController {
   constructor(
-    public createCheckoutSessionUseCase: IcreateSubscriptionCheckoutSessionUseCase
+    public createCheckoutSessionUseCase: ICreateSubscriptionCheckoutSessionUseCase
   ) {}
   create = async (req: Request, res: Response, next: NextFunction) => {
     try {

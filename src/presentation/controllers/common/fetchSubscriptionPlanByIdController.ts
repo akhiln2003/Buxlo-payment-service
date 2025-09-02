@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import HttpStatusCode from "@buxlo/common/build/common/httpStatusCode";
-import { IfetchSubscriptionPlanByIdUseCase } from "../../../application/interface/common/IfetchSubscriptionPlanByIdUseCase";
+import { IFetchSubscriptionPlanByIdUseCase } from "../../../application/interface/common/IFetchSubscriptionPlanByIdUseCase";
 
 export class FetchSubscriptionPlanByIdController {
   constructor(
-    private _fetchSubscriptionPlanByIdUseCase: IfetchSubscriptionPlanByIdUseCase
+    private _fetchSubscriptionPlanByIdUseCase: IFetchSubscriptionPlanByIdUseCase
   ) {}
   fetchData = async (req: Request, res: Response, next: NextFunction) => {
     try {

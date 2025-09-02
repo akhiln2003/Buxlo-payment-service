@@ -1,5 +1,5 @@
 import { PaymentStatus } from "../../../infrastructure/@types/enums/paymentStatus";
-import { IwebHookUseCase } from "../../interface/webHook/IwebHookUseCase";
+import { IWebHookUseCase } from "../../interface/webHook/IWebHookUseCase";
 import Stripe from "stripe";
 import { IpaymetRepository } from "../../../domain/interfaces/IpaymentRepository";
 import { IsubscriptionPaymentRepository } from "../../../domain/interfaces/IsubscriptionPaymentRepository";
@@ -10,7 +10,7 @@ import {
 } from "../../../infrastructure/rpc/grpc/client";
 import { IsubscriptionRepository } from "../../../domain/interfaces/IsubscriptionRepository";
 
-export class WebHookUseCase implements IwebHookUseCase {
+export class WebHookUseCase implements IWebHookUseCase {
   constructor(
     private _stripe: Stripe,
     private _bookngPaymentRepository: IpaymetRepository,

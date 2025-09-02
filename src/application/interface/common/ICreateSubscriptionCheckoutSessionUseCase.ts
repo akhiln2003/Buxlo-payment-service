@@ -1,7 +1,7 @@
 import { Subscription } from "../../../domain/entities/subscription";
 
 
-export interface IcreateSubscriptionCheckoutSessionUseCase {
+export interface ICreateSubscriptionCheckoutSessionUseCase {
   execute(
     data: Subscription,
     userId: string,
