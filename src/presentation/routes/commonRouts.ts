@@ -16,6 +16,8 @@ import {
 } from "../../domain/zodSchemaDto/input/common/createCheckoutSession.dto";
 import { fetchOnePaymentDto } from "../../domain/zodSchemaDto/input/common/fetchOnePaymet.dto";
 import { updatePaymentDto } from "../../domain/zodSchemaDto/input/common/updatepaymet.dto";
+import { FetchSubscriptionPlanByIdController } from "../controllers/common/fetchSubscriptionPlanByIdController";
+import { fetchSubscriptionplanByIdDto } from "../../domain/zodSchemaDto/input/common/fetchSubscriptionplanById.dto";
 
 export class CommonRouter {
   private _router: Router;
@@ -25,6 +27,7 @@ export class CommonRouter {
   private _fetchWalletController!: FetchWalletController;
   private _updateWalletController!: UpdateWalletController;
   private _fetchSubscriptionPlanController!: FetchSubscriptionPlanController;
+  private _fetchSubscriptionPlanByIdController!: FetchSubscriptionPlanByIdController;
   private _createCheckoutSessionController!: CreateCheckoutSessionController;
   private _createSubscriptonCheckoutSessionController!: CreateSubscriptionCheckoutSessionController;
   private _fetchOnePaymetController!: FetchOnePaymentController;
@@ -51,6 +54,10 @@ export class CommonRouter {
     this._fetchSubscriptionPlanController = new FetchSubscriptionPlanController(
       this._diContainer.fetchSubscriptionPlanUseCase()
     );
+    this._fetchSubscriptionPlanByIdController =
+      new FetchSubscriptionPlanByIdController(
+        this._diContainer.fetchSubscriptionPlanByIdUseCase()
+      );
 
     this._createCheckoutSessionController = new CreateCheckoutSessionController(
       this._diContainer.createBookingCheckoutSessionUseCase()
@@ -82,6 +89,11 @@ export class CommonRouter {
     this._router.get(
       "/fetchsubscriptionplan",
       this._fetchSubscriptionPlanController.fetchData
+    );
+    this._router.get(
+      "/fetchsubscriptionplanbyid/:id",
+      validateReqParams(fetchSubscriptionplanByIdDto),
+      this._fetchSubscriptionPlanByIdController.fetchData
     );
     this._router.post(
       "/createbookingcheckoutsession/:userId/:type",
