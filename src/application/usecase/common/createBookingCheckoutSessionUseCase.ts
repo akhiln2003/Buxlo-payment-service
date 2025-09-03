@@ -19,7 +19,17 @@ export class CreateBookingCheckoutSessionUseCase
     userId: string,
     type: "booking" | "subscription"
   ): Promise<string> {
-    await this._paymentRepo.checkSlotExixt(data.id as string);
+    const pendingPayments = await this._paymentRepo.cancelPendingPaymentsByUser(
+      userId as string
+    );
+
+    for (const p of pendingPayments) {
+      try {
+        await this._stripeService.expireCheckoutSession(p.paymentId);
+      } catch (err) {
+        console.error("Failed to expire stripe session", err);
+      }
+    }
     const session = await this._stripeService.createCheckoutSession(
       data.salary,
       data.name,

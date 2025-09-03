@@ -5,7 +5,6 @@ import { IpaymetRepository } from "../../domain/interfaces/IpaymentRepository";
 import { BookingPaymentEntity } from "../database/sql/entity/bookingPayment.entity";
 import { Payment } from "../../domain/entities/bookingPaymentEntites";
 import { PaymentStatus } from "../@types/enums/paymentStatus";
-import { In } from "typeorm";
 
 export class BookingPaymentRepository implements IpaymetRepository {
   private _repository: Repository<BookingPaymentEntity>;
@@ -82,21 +81,6 @@ export class BookingPaymentRepository implements IpaymetRepository {
     }
   }
 
-  async checkSlotExixt(slotId: string): Promise<null> {
-    try {
-      const paymentEntity = await this._repository.findOneBy({
-        slotId,
-        status: In([PaymentStatus.PENDING, PaymentStatus.BOOKED]),
-      });
-      if (paymentEntity)
-        throw new BadRequest("This slot is currently unavailable");
-
-      return null;
-    } catch (error: any) {
-      throw new BadRequest(`Failed to fetch payment: ${error.message}`);
-    }
-  }
-
   async findAll(id: string, role: "user" | "mentor"): Promise<Payment[]> {
     try {
       if (role == "user") {
@@ -122,5 +106,20 @@ export class BookingPaymentRepository implements IpaymetRepository {
     } catch (error: any) {
       throw new BadRequest(`Failed to fetch payments: ${error.message}`);
     }
+  }
+
+  async cancelPendingPaymentsByUser(userId: string): Promise<Payment[]> {
+    const pendingPayments = await this._repository.find({
+      where: { userId, status: PaymentStatus.PENDING },
+    });
+
+    const updatedPayments: Payment[] = [];
+
+    for (const payment of pendingPayments) {
+      payment.status = PaymentStatus.FAILD;
+      updatedPayments.push(await this._repository.save(payment));
+    }
+
+    return updatedPayments; // return to service layer
   }
 }

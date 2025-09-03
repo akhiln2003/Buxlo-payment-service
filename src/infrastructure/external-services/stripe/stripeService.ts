@@ -1,14 +1,14 @@
 import { BadRequest } from "@buxlo/common";
 import { stripe } from "./stripe.config";
+import { IStripeService } from "../../../domain/interfaces/IstripeService";
 
-export class StripeService {
+export class StripeService implements IStripeService {
   async createCheckoutSession(
     amount: number,
     name: string,
     id: string,
     type: string
   ): Promise<{ url: string; id: string }> {
-    // Add input validation
     if (!amount || isNaN(amount) || amount <= 0) {
       throw new BadRequest("Invalid amount provided");
     }
@@ -22,6 +22,8 @@ export class StripeService {
     }
 
     try {
+      const fiveMinutesFromNow = Math.floor(Date.now() / 1000) + 30 * 60; // current time + 5 mins
+
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
         line_items: [
@@ -39,6 +41,8 @@ export class StripeService {
         mode: "payment",
         success_url: `${process.env.FRONT_END_BASE_URL}/${type}success?id=${id}`,
         cancel_url: `${process.env.FRONT_END_BASE_URL}/cancel?type=${type}&id={CHECKOUT_SESSION_ID}`,
+        expires_at: fiveMinutesFromNow, 
+
         metadata: {
           type,
         },
@@ -49,6 +53,15 @@ export class StripeService {
     } catch (error) {
       console.error("Error creating checkout session:", error);
       throw new BadRequest("Failed to create checkout session");
+    }
+  }
+
+  async expireCheckoutSession(sessionId: string): Promise<void> {
+    try {
+      await stripe.checkout.sessions.expire(sessionId);
+    } catch (err) {
+      console.error("Failed to expire stripe session", err);
+      throw new BadRequest("Could not expire old stripe session");
     }
   }
 }
