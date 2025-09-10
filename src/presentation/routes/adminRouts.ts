@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { DIContainer } from "../../infrastructure/di/DIContainer";
-import { UpdateSubscriptionPlanController } from "../controllers/admin/updateSubscriptionPlanController";
-import { AddSubscriptionPlanController } from "../controllers/admin/addSubscriptionPlanController";
+import { UpdateSubscriptionPlanController } from "../controllers/admin/updateSubscriptionPlan.controller";
+import { AddSubscriptionPlanController } from "../controllers/admin/addSubscriptionPlan.controller";
 
 export class AdminRouter {
   private _router: Router;

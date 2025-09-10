@@ -4,6 +4,7 @@ import { AppDataSource } from "../database/sql/connection";
 import { SubscriptionPaymentEntity } from "../database/sql/entity/subscriptionPayment.entity";
 import { IsubscriptionPaymentRepository } from "../../domain/interfaces/IsubscriptionPaymentRepository";
 import { SubscriptionPayment } from "../../domain/entities/subscriptionPaymentEntity";
+import { PaymentStatus } from "../@types/enums/paymentStatus";
 
 export class SubscriptionPaymentRepository
   implements IsubscriptionPaymentRepository
@@ -62,5 +63,22 @@ export class SubscriptionPaymentRepository
     } catch (error: any) {
       throw new BadRequest(`Failed to update payment: ${error.message}`);
     }
+  }
+
+  async cancelPendingPaymentsByUser(
+    userId: string
+  ): Promise<SubscriptionPayment[]> {
+    const pendingPayments = await this._repository.find({
+      where: { userId, status: PaymentStatus.PENDING },
+    });
+
+    const updatedPayments: SubscriptionPayment[] = [];
+
+    for (const payment of pendingPayments) {
+      payment.status = PaymentStatus.FAILD;
+      updatedPayments.push(await this._repository.save(payment));
+    }
+
+    return updatedPayments;
   }
 }

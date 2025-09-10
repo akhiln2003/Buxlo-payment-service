@@ -9,7 +9,7 @@ import { SubscriptionPaymentEntity } from "./entity/subscriptionPayment.entity";
 const AppDataSource = new DataSource({
   type: "postgres",
   host: process.env.POSTGRES_HOST as string,
-  port: parseInt(process.env.POSTGRES_PORT as any) || 5432,
+  port: parseInt(process.env.POSTGRES_PORT as string) || 5432,
   username: process.env.POSTGRES_USERNAME as string,
   password: process.env.POSTGRES_PASSWORD as string,
   database: process.env.POSTGRES_DATABASE as string,

@@ -1,7 +1,9 @@
 import { BadRequest } from "@buxlo/common";
 import { IStripeService } from "../../../domain/interfaces/IstripeService";
-import { ICreateSubscriptionCheckoutSessionUseCase } from "../../interface/common/ICreateSubscriptionCheckoutSessionUseCase";
-import { Subscription } from "../../../domain/entities/subscription";
+import {
+  ICreateSubscriptionCheckoutSessionUseCase,
+  ISubscriptionCheckoutData,
+} from "../../interface/common/ICreateSubscriptionCheckoutSessionUseCase";
 import { SubscriptionPlan } from "../../../infrastructure/@types/enums/subscriptionPlanType";
 import { IsubscriptionPaymentRepository } from "../../../domain/interfaces/IsubscriptionPaymentRepository";
 import { PaymentStatus } from "../../../infrastructure/@types/enums/paymentStatus";
@@ -16,10 +18,23 @@ export class CreateSubscriptionCheckoutSessionUseCase
     private _walletRepository: IwalletRepository
   ) {}
   async execute(
-    data: Subscription,
+    data: ISubscriptionCheckoutData,
     userId: string,
     type: "booking" | "subscription"
   ): Promise<string> {
+    const pendingPayments =
+      await this._subscriptionPaymentRepo.cancelPendingPaymentsByUser(
+        userId as string
+      );
+
+    for (const p of pendingPayments) {
+      try {
+        await this._stripeService.expireCheckoutSession(p.paymentId);
+      } catch (err) {
+        console.error("Failed to expire stripe session", err);
+      }
+    }
+
     const amount = data.offer
       ? Number(data.price) - (Number(data.price) * Number(data.offer)) / 100
       : Number(data.price);

@@ -31,6 +31,8 @@ import { UpdateBookingPaymetUseCase } from "../../application/usecase/common/upd
 import { UpdateSubscriptionPaymetUseCase } from "../../application/usecase/common/updateSubscriptionPaymetUseCase";
 import { IFetchSubscriptionPlanByIdUseCase } from "../../application/interface/common/IFetchSubscriptionPlanByIdUseCase";
 import { FetchSubscriptionPlanByIdUseCase } from "../../application/usecase/common/fetchSubscriptionPlanByIdUseCase";
+import { FetchBookingsPaymetUseCase } from "../../application/usecase/common/FetchBookingsPaymetUseCase";
+import { IFetchBookingsPaymetUseCase } from "../../application/interface/common/IFetchBookingsPaymetUseCase";
 
 export class DIContainer {
   private _subscriptionPlanRepository: SubscriptionRepository;
@@ -108,6 +110,10 @@ export class DIContainer {
 
   updateBookingPaymetUseCase(): IUpdateBookingPaymetUseCase {
     return new UpdateBookingPaymetUseCase(this._bookngPaymentRepository);
+  }
+
+  fetchBookingsPaymetUseCase(): IFetchBookingsPaymetUseCase {
+    return new FetchBookingsPaymetUseCase(this._bookngPaymentRepository);
   }
   updateSubscriptionPaymetUseCase(): IUpdateSubscriptionPaymetUseCase {
     return new UpdateSubscriptionPaymetUseCase(

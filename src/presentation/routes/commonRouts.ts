@@ -1,23 +1,25 @@
 import { Router } from "express";
 import { DIContainer } from "../../infrastructure/di/DIContainer";
-import { FetchWalletController } from "../controllers/common/fetchWalletController";
-import { UpdateWalletController } from "../controllers/common/updateWalletController";
-import { CreateWalletController } from "../controllers/common/createWalletController";
-import { FetchSubscriptionPlanController } from "../controllers/common/fetchSubscriptionPlanController";
-import { CreateCheckoutSessionController } from "../controllers/common/createBookingCheckoutSessionController";
+import { FetchWalletController } from "../controllers/common/fetchWallet.controller";
+import { UpdateWalletController } from "../controllers/common/updateWallet.controller";
+import { CreateWalletController } from "../controllers/common/createWallet.controller";
+import { FetchSubscriptionPlanController } from "../controllers/common/fetchSubscriptionPlan.controller";
+import { CreateCheckoutSessionController } from "../controllers/common/createBookingCheckoutSession.controller";
 import { validateReqBody, validateReqParams } from "@buxlo/common";
-import { FetchOnePaymentController } from "../controllers/common/fetchOnePaymentController";
-import { CreateSubscriptionCheckoutSessionController } from "../controllers/common/createSubscriptonCheckoutSessionController";
-import { UpdateBookingPaymetController } from "../controllers/common/updateBookingPaymetController";
-import { UpdateSubscriptionPaymetController } from "../controllers/common/updateSubscriptionPaymetController";
+import { FetchOnePaymentController } from "../controllers/common/fetchOnePayment.controller";
+import { CreateSubscriptionCheckoutSessionController } from "../controllers/common/createSubscriptonCheckoutSession.controller";
+import { UpdateBookingPaymetController } from "../controllers/common/updateBookingPaymet.controller";
+import { UpdateSubscriptionPaymetController } from "../controllers/common/updateSubscriptionPaymet.controller";
 import {
   createCheckoutSessionBodyDto,
   createCheckoutSessionParamsDto,
 } from "../../domain/zodSchemaDto/input/common/createCheckoutSession.dto";
 import { fetchOnePaymentDto } from "../../domain/zodSchemaDto/input/common/fetchOnePaymet.dto";
 import { updatePaymentDto } from "../../domain/zodSchemaDto/input/common/updatepaymet.dto";
-import { FetchSubscriptionPlanByIdController } from "../controllers/common/fetchSubscriptionPlanByIdController";
+import { FetchSubscriptionPlanByIdController } from "../controllers/common/fetchSubscriptionPlanById.controller";
 import { fetchSubscriptionplanByIdDto } from "../../domain/zodSchemaDto/input/common/fetchSubscriptionplanById.dto";
+import { fetchBookingsDto } from "../../domain/zodSchemaDto/input/common/fetchBookings.dto";
+import { FetchBookingsPaymetController } from "../controllers/common/fetchBookingsPaymet.controller";
 
 export class CommonRouter {
   private _router: Router;
@@ -33,6 +35,7 @@ export class CommonRouter {
   private _fetchOnePaymetController!: FetchOnePaymentController;
   private _updateSubscriptionPaymetController!: UpdateSubscriptionPaymetController;
   private _updateBookingPaymetController!: UpdateBookingPaymetController;
+  private _fetchBookingsPaymetController!: FetchBookingsPaymetController;
 
   constructor() {
     this._router = Router();
@@ -76,6 +79,10 @@ export class CommonRouter {
       );
     this._updateBookingPaymetController = new UpdateBookingPaymetController(
       this._diContainer.updateBookingPaymetUseCase()
+    );
+
+    this._fetchBookingsPaymetController = new FetchBookingsPaymetController(
+      this._diContainer.fetchBookingsPaymetUseCase()
     );
   }
 
@@ -121,6 +128,12 @@ export class CommonRouter {
       "/updatesubbookingpaymet/:id",
       validateReqParams(updatePaymentDto),
       this._updateBookingPaymetController.update
+    );
+
+    this._router.get(
+      "/fetchbookings/:id/:page",
+      validateReqParams(fetchBookingsDto),
+      this._fetchBookingsPaymetController.fetch
     );
   }
 

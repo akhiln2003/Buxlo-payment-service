@@ -10,4 +10,6 @@ export interface IsubscriptionPaymentRepository {
     id: string,
     data: Partial<SubscriptionPayment>
   ): Promise<SubscriptionPayment>;
+
+  cancelPendingPaymentsByUser(userId: string): Promise<SubscriptionPayment[]>;
 }

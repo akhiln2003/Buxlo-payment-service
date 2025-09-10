@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { DIContainer } from "../../infrastructure/di/DIContainer";
-import { WebHookController } from "../controllers/webHook/weebHookController";
+import { WebHookController } from "../controllers/webHook/weebHook.controller";
 
 export class WebHookRouter {
   private _router: Router;

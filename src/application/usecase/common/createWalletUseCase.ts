@@ -1,7 +1,9 @@
 import { BadRequest } from "@buxlo/common";
-import { Wallet } from "../../../domain/entities/wallet";
 import { IwalletRepository } from "../../../domain/interfaces/IwalletRepository";
-import { ICreateWalletUseCase } from "../../interface/common/ICreateWalletUseCase";
+import {
+  ICreateWalletUseCase,
+  ICreateWalletUseCaseProps,
+} from "../../interface/common/ICreateWalletUseCase";
 import {
   WalletMapper,
   WalletResponseDto,
@@ -9,7 +11,7 @@ import {
 
 export class CreateWalletUseCase implements ICreateWalletUseCase {
   constructor(private _walletRepo: IwalletRepository) {}
-  async execute(data: Wallet): Promise<WalletResponseDto> {
+  async execute(data: ICreateWalletUseCaseProps): Promise<WalletResponseDto> {
     try {
       const newData = await this._walletRepo.create(data);
       return WalletMapper.toDto(newData);

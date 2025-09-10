@@ -1,13 +1,13 @@
-import { Application } from "express";
+import { Application, RequestHandler, Router } from "express";
 import { IServer } from "../../domain/interfaces/IServer";
 import express from "express";
 import cookieParser from "cookie-parser";
-import { createServer } from "http";
+import { createServer, Server as HttpServer } from "http";
 import { WebHookRouter } from "../../presentation/routes/WebhookRoutes";
 
 export class ExpressWebServer implements IServer {
   private _app: Application;
-  private _server: any;
+  private _server: HttpServer;
 
   constructor() {
     this._app = express();
@@ -22,14 +22,14 @@ export class ExpressWebServer implements IServer {
 
     this._server = createServer(this._app);
   }
-  registerMiddleware(middleware: any): void {
+  registerMiddleware(middleware: RequestHandler): void {
     this._app.use(middleware);
   }
-  registerRoutes(path: string, router: any): void {
+  registerRoutes(path: string, router: Router): void {
     this._app.use(path, router);
   }
 
-  registerErrorHandler(middleware: any): void {
+  registerErrorHandler(middleware: RequestHandler): void {
     this._app.use(middleware);
   }
   async start(port: number): Promise<void> {
@@ -44,7 +44,7 @@ export class ExpressWebServer implements IServer {
   async close(): Promise<void> {
     if (this._server) {
       return new Promise((resolve, reject) => {
-        this._server.close((err: any) => {
+        this._server.close((err?: Error) => {
           if (err) {
             console.error("Error closing", err);
             return reject(err);

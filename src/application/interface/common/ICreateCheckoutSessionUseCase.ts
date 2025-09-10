@@ -1,8 +1,16 @@
-import { AvailabilityEntities } from "../../../domain/entities/availabilityEntities";
+import { PaymentStatus } from "../../../infrastructure/@types/enums/paymentStatus";
 
-export interface ICreateCheckoutSessionUseCaseDataProps
-  extends AvailabilityEntities {
-  name: string;
+export interface ICreateCheckoutSessionUseCaseDataProps {
+  mentorId: string;
+  date: string;
+  startTime: string;
+  duration: number;
+  status: PaymentStatus;
+  isBooked: boolean;
+  salary: number;
+  description?: string;
+  id?: string;
+  name:string
 }
 export interface ICreateBookingCheckoutSessionUseCase {
   execute(

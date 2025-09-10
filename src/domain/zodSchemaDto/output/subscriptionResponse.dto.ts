@@ -19,8 +19,8 @@ export class SubscriptionMapper {
       price: Number(subscription.price),
       offer: Number(subscription.offer),
       type: subscription.type,
-      createdAt: new Date(subscription.createdAt),
-      updatedAt: new Date(subscription.updatedAt),
+      createdAt: new Date(subscription.createdAt as Date),
+      updatedAt: new Date(subscription.updatedAt as Date),
     });
   }
 }

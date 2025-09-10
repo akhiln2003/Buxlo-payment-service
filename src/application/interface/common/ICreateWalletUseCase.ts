@@ -1,6 +1,10 @@
-import { Wallet } from "../../../domain/entities/wallet";
 import { WalletResponseDto } from "../../../domain/zodSchemaDto/output/walletResponse.dto";
 
+export interface ICreateWalletUseCaseProps {
+  balance: number;
+  name: string;
+  userId: string;
+}
 export interface ICreateWalletUseCase {
-  execute(data: Wallet): Promise<WalletResponseDto>;
+  execute(data: ICreateWalletUseCaseProps): Promise<WalletResponseDto>;
 }

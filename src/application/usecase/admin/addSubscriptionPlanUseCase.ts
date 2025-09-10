@@ -1,7 +1,9 @@
 import { InternalServerError } from "@buxlo/common";
-import { Subscription } from "../../../domain/entities/subscription";
 import { IsubscriptionRepository } from "../../../domain/interfaces/IsubscriptionRepository";
-import { IAddSubscriptionPlanUseCase } from "../../interface/admin/IAddSubscriptionPlanUseCase";
+import {
+  IAddSubscriptionPlanUseCase,
+  IAddSubscriptionPlanUseCaseProps,
+} from "../../interface/admin/IAddSubscriptionPlanUseCase";
 import {
   SubscriptionMapper,
   SubscriptionResponseDto,
@@ -10,7 +12,9 @@ import {
 export class AddSubscriptionPlanUseCase implements IAddSubscriptionPlanUseCase {
   constructor(private _subscriptionRepository: IsubscriptionRepository) {}
 
-  async execute(data: Subscription[]): Promise<SubscriptionResponseDto[]> {
+  async execute(
+    data: IAddSubscriptionPlanUseCaseProps[]
+  ): Promise<SubscriptionResponseDto[]> {
     try {
       const createdSubscriptions = await Promise.all(
         data.map((item) => this._subscriptionRepository.create(item))

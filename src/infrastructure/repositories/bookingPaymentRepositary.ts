@@ -81,28 +81,39 @@ export class BookingPaymentRepository implements IpaymetRepository {
     }
   }
 
-  async findAll(id: string, role: "user" | "mentor"): Promise<Payment[]> {
+  async findAll(
+    id: string,
+    role: "user" | "mentor",
+    page: number = 1,
+    searchData?: string
+  ): Promise<{ bookings: Payment[]; totalPages: number }> {
     try {
-      if (role == "user") {
-        const paymentEntities = await this._repository.find({
-          where: { userId: id },
-          order: { transactionDate: "DESC" },
-        });
-        if (!paymentEntities.length) {
-          return [];
-        }
+      const limit = 10;
+      const skip = (page - 1) * limit;
 
-        return paymentEntities;
+      // Build query
+      const query = this._repository.createQueryBuilder("payment");
+
+      if (role === "user") {
+        query.where("payment.userId = :id", { id });
       } else {
-        const paymentEntities = await this._repository.find({
-          where: { mentorId: id },
-          order: { transactionDate: "DESC" },
-        });
-        if (!paymentEntities.length) {
-          return [];
-        }
-        return paymentEntities;
+        query.where("payment.mentorId = :id", { id });
       }
+
+      // Search filter (by referenceId or status or amount or category)
+      if (searchData && searchData.trim() !== "") {
+        query.andWhere(
+          "(payment.referenceId ILIKE :search OR payment.status ILIKE :search OR CAST(payment.amount AS TEXT) ILIKE :search OR payment.category ILIKE :search)",
+          { search: `%${searchData}%` }
+        );
+      }
+
+      query.orderBy("payment.transactionDate", "DESC").skip(skip).take(limit);
+
+      const [payments, totalCount] = await query.getManyAndCount();
+      const totalPages = Math.ceil(totalCount / limit);
+
+      return { bookings: payments, totalPages };
     } catch (error: any) {
       throw new BadRequest(`Failed to fetch payments: ${error.message}`);
     }
@@ -120,6 +131,6 @@ export class BookingPaymentRepository implements IpaymetRepository {
       updatedPayments.push(await this._repository.save(payment));
     }
 
-    return updatedPayments; // return to service layer
+    return updatedPayments; 
   }
 }
