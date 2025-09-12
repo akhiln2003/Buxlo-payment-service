@@ -1,4 +1,4 @@
-import { SubscriptionPayment } from "../entities/subscriptionPaymentEntity";
+import { SubscriptionPayment } from "../entities/subscriptionPayment.entity";
 
 export interface IsubscriptionPaymentRepository {
   create(data: SubscriptionPayment): Promise<SubscriptionPayment | boolean>;

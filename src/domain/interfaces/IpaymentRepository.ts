@@ -1,4 +1,4 @@
-import { Payment } from "../entities/bookingPaymentEntites";
+import { Payment } from "../entities/bookingPayment.entites";
 
 export interface IpaymetRepository {
   create(data: Payment): Promise<Payment | boolean>;

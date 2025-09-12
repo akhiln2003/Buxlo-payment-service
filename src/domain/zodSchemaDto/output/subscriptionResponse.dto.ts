@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Subscription } from "../../entities/subscription";
+import { Subscription } from "../../entities/subscription.entites";
 
 export const SubscriptionResponseDto = z.object({
   id: z.string().uuid(),

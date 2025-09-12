@@ -1,4 +1,4 @@
-import { Wallet } from "../entities/wallet";
+import { Wallet } from "../entities/wallet.entites";
 
 export interface IwalletRepository {
   create(data: Wallet): Promise<Wallet>;

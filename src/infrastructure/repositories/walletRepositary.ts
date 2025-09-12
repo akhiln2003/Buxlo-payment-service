@@ -3,7 +3,7 @@ import { EntityManager, Repository } from "typeorm";
 import { AppDataSource } from "../database/sql/connection";
 import { IwalletRepository } from "../../domain/interfaces/IwalletRepository";
 import { WalletEntity } from "../database/sql/entity/wallet.entity";
-import { Wallet } from "../../domain/entities/wallet";
+import { Wallet } from "../../domain/entities/wallet.entites";
 
 export class WalletRepository implements IwalletRepository {
   private _repository: Repository<WalletEntity>;

@@ -2,7 +2,7 @@ import { AppDataSource } from "../database/sql/connection";
 import { EntityManager } from "typeorm";
 import { BookingPaymentRepository } from "./bookingPaymentRepositary";
 import { WalletRepository } from "../repositories/walletRepositary";
-import { IunitOfWork } from "../../domain/entities/IunitOfWork";
+import { IunitOfWork } from "../../domain/entities/IunitOfWork.entites";
 
 export class TypeORMUnitOfWork implements IunitOfWork {
   constructor(private _manager?: EntityManager) {}

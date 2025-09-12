@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Payment } from "../../entities/bookingPaymentEntites";
+import { Payment } from "../../entities/bookingPayment.entites";
 
 export const BookingPaymentResponseDto = z.object({
   id: z.string().uuid(),

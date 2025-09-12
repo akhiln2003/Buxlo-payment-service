@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Wallet } from "../../entities/wallet";
+import { Wallet } from "../../entities/wallet.entites";
 
 export const WalletResponseDto = z.object({
   id: z.string().uuid(),

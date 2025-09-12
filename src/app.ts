@@ -1,8 +1,8 @@
 import { errorHandler } from "@buxlo/common";
 import loggerMiddleware from "./presentation/middlewares/loggerMiddleware";
 import { IServer } from "./domain/interfaces/IServer";
-import { AdminRouter } from "./presentation/routes/adminRouts";
-import { CommonRouter } from "./presentation/routes/commonRouts";
+import { AdminRouter } from "./presentation/routes/admin.routes";
+import { CommonRouter } from "./presentation/routes/common.routes";
 import {
   connectDB,
   disconnectDB,

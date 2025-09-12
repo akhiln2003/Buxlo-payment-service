@@ -3,7 +3,7 @@ import { EntityManager, Repository } from "typeorm";
 import { AppDataSource } from "../database/sql/connection";
 import { IpaymetRepository } from "../../domain/interfaces/IpaymentRepository";
 import { BookingPaymentEntity } from "../database/sql/entity/bookingPayment.entity";
-import { Payment } from "../../domain/entities/bookingPaymentEntites";
+import { Payment } from "../../domain/entities/bookingPayment.entites";
 import { PaymentStatus } from "../@types/enums/paymentStatus";
 
 export class BookingPaymentRepository implements IpaymetRepository {

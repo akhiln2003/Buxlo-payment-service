@@ -1,6 +1,6 @@
 import { BadRequest } from "@buxlo/common";
 import { IsubscriptionRepository } from "../../domain/interfaces/IsubscriptionRepository";
-import { Subscription } from "../../domain/entities/subscription";
+import { Subscription } from "../../domain/entities/subscription.entites";
 import { Repository } from "typeorm";
 import { SubscriptionEntity } from "../database/sql/entity/subscription.entity";
 import { AppDataSource } from "../database/sql/connection";

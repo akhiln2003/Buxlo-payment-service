@@ -1,7 +1,7 @@
 import { KafkaConsumer, UserCreatedEvent } from "@buxlo/common";
 import { Topics } from "@buxlo/common/build/events/topics";
 import { Consumer, KafkaMessage } from "kafkajs";
-import { Wallet } from "../../../../domain/entities/wallet";
+import { Wallet } from "../../../../domain/entities/wallet.entites";
 import { WalletRepository } from "../../../repositories/walletRepositary";
 
 export class WalletCreatedConsumer extends KafkaConsumer<UserCreatedEvent> {

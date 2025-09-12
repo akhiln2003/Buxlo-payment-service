@@ -3,7 +3,7 @@ import { IServer } from "../../domain/interfaces/IServer";
 import express from "express";
 import cookieParser from "cookie-parser";
 import { createServer, Server as HttpServer } from "http";
-import { WebHookRouter } from "../../presentation/routes/WebhookRoutes";
+import { WebHookRouter } from "../../presentation/routes/Webhook.routes";
 
 export class ExpressWebServer implements IServer {
   private _app: Application;

@@ -3,7 +3,7 @@ import { EntityManager, Repository } from "typeorm";
 import { AppDataSource } from "../database/sql/connection";
 import { SubscriptionPaymentEntity } from "../database/sql/entity/subscriptionPayment.entity";
 import { IsubscriptionPaymentRepository } from "../../domain/interfaces/IsubscriptionPaymentRepository";
-import { SubscriptionPayment } from "../../domain/entities/subscriptionPaymentEntity";
+import { SubscriptionPayment } from "../../domain/entities/subscriptionPayment.entity";
 import { PaymentStatus } from "../@types/enums/paymentStatus";
 
 export class SubscriptionPaymentRepository
