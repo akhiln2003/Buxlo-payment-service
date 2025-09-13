@@ -4,13 +4,16 @@ import { IsubscriptionPaymentRepository } from "../../../domain/interfaces/Isubs
 import {
   SubscriptionPaymentMapper,
   SubscriptionPaymentResponseDto,
-} from "../../../domain/zodSchemaDto/output/subscriptionPaymentResponse.dto";
+} from "../../dto/subscriptionPaymentResponse.dto";
+import { IPaymentHistoryRepository } from "../../../domain/interfaces/IPaymentHistoryRepository";
 
 export class UpdateSubscriptionPaymetUseCase
   implements IUpdateSubscriptionPaymetUseCase
 {
   constructor(
-    private _subscriptionPaymentRepository: IsubscriptionPaymentRepository
+    private _subscriptionPaymentRepository: IsubscriptionPaymentRepository,
+        private _paymentHistoryRepository: IPaymentHistoryRepository
+
   ) {}
   async execute(
     id: string,
@@ -20,6 +23,16 @@ export class UpdateSubscriptionPaymetUseCase
       id,
       data
     );
+
+    const historyData = {
+          amount: updatedData.amount,
+          category: "slotBooking",
+          paymentId: updatedData.paymentId,
+          status: updatedData.status,
+          userId: updatedData.userId,
+        };
+
+        await this._paymentHistoryRepository.create(historyData);
     return SubscriptionPaymentMapper.toDto(updatedData);
   }
 }

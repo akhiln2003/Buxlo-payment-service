@@ -4,10 +4,7 @@ import {
   ICreateWalletUseCase,
   ICreateWalletUseCaseProps,
 } from "../../interface/common/ICreateWalletUseCase";
-import {
-  WalletMapper,
-  WalletResponseDto,
-} from "../../../domain/zodSchemaDto/output/walletResponse.dto";
+import { WalletMapper, WalletResponseDto } from "../../dto/walletResponse.dto";
 
 export class CreateWalletUseCase implements ICreateWalletUseCase {
   constructor(private _walletRepo: IwalletRepository) {}

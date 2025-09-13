@@ -7,7 +7,7 @@ import {
 import {
   WalletMapper,
   WalletResponseDto,
-} from "../../../domain/zodSchemaDto/output/walletResponse.dto";
+} from "../../dto/walletResponse.dto";
 
 export class UpdateWalletUseCase implements IUpdateWalletUseCase {
   constructor(private _walletRepo: IwalletRepository) {}

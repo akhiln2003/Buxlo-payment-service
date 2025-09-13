@@ -1,4 +1,4 @@
-import { WalletResponseDto } from "../../../domain/zodSchemaDto/output/walletResponse.dto";
+import { WalletResponseDto } from "../../dto/walletResponse.dto";
 
 export interface ICreateWalletUseCaseProps {
   balance: number;

@@ -1,18 +1,20 @@
 import { BadRequest } from "@buxlo/common";
-import { IpaymetRepository } from "../../../domain/interfaces/IpaymentRepository";
+import { IPaymetRepository } from "../../../domain/interfaces/IpaymentRepository";
 import { IStripeService } from "../../../domain/interfaces/IstripeService";
 import { PaymentStatus } from "../../../infrastructure/@types/enums/paymentStatus";
 import {
   ICreateBookingCheckoutSessionUseCase,
   ICreateCheckoutSessionUseCaseDataProps,
 } from "../../interface/common/ICreateCheckoutSessionUseCase";
+import { IPaymentHistoryRepository } from "../../../domain/interfaces/IPaymentHistoryRepository";
 
 export class CreateBookingCheckoutSessionUseCase
   implements ICreateBookingCheckoutSessionUseCase
 {
   constructor(
     private _stripeService: IStripeService,
-    private _paymentRepo: IpaymetRepository
+    private _paymentRepo: IPaymetRepository,
+    private _paymentHistoryRepository: IPaymentHistoryRepository
   ) {}
   async execute(
     data: ICreateCheckoutSessionUseCaseDataProps,
@@ -22,7 +24,19 @@ export class CreateBookingCheckoutSessionUseCase
     const pendingPayments = await this._paymentRepo.cancelPendingPaymentsByUser(
       userId as string
     );
+    await Promise.all(
+      pendingPayments.map(async (payment) => {
+        const historyData = {
+          amount: payment.amount,
+          category: "slotBooking",
+          paymentId: payment.paymentId,
+          status: payment.status,
+          userId: payment.userId,
+        };
 
+        await this._paymentHistoryRepository.create(historyData);
+      })
+    );
     for (const p of pendingPayments) {
       try {
         await this._stripeService.expireCheckoutSession(p.paymentId);

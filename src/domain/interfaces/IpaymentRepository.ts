@@ -1,6 +1,6 @@
 import { Payment } from "../entities/bookingPayment.entites";
 
-export interface IpaymetRepository {
+export interface IPaymetRepository {
   create(data: Payment): Promise<Payment | boolean>;
   update(paymentId: string, data: Partial<Payment>): Promise<Payment>;
   findByIdAndUpdate(id: string, data: Partial<Payment>): Promise<Payment>;

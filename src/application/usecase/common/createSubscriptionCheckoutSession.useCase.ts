@@ -8,6 +8,7 @@ import { SubscriptionPlan } from "../../../infrastructure/@types/enums/subscript
 import { IsubscriptionPaymentRepository } from "../../../domain/interfaces/IsubscriptionPaymentRepository";
 import { PaymentStatus } from "../../../infrastructure/@types/enums/paymentStatus";
 import { IwalletRepository } from "../../../domain/interfaces/IwalletRepository";
+import { IPaymentHistoryRepository } from "../../../domain/interfaces/IPaymentHistoryRepository";
 
 export class CreateSubscriptionCheckoutSessionUseCase
   implements ICreateSubscriptionCheckoutSessionUseCase
@@ -15,7 +16,8 @@ export class CreateSubscriptionCheckoutSessionUseCase
   constructor(
     private _stripeService: IStripeService,
     private _subscriptionPaymentRepo: IsubscriptionPaymentRepository,
-    private _walletRepository: IwalletRepository
+    private _walletRepository: IwalletRepository,
+    private _paymentHistoryRepository: IPaymentHistoryRepository
   ) {}
   async execute(
     data: ISubscriptionCheckoutData,
@@ -26,7 +28,19 @@ export class CreateSubscriptionCheckoutSessionUseCase
       await this._subscriptionPaymentRepo.cancelPendingPaymentsByUser(
         userId as string
       );
+    await Promise.all(
+      pendingPayments.map(async (payment) => {
+        const historyData = {
+          amount: payment.amount,
+          category: "slotBooking",
+          paymentId: payment.paymentId,
+          status: payment.status,
+          userId: payment.userId,
+        };
 
+        await this._paymentHistoryRepository.create(historyData);
+      })
+    );
     for (const p of pendingPayments) {
       try {
         await this._stripeService.expireCheckoutSession(p.paymentId);

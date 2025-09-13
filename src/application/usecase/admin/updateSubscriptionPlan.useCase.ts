@@ -7,7 +7,7 @@ import { IsubscriptionRepository } from "../../../domain/interfaces/Isubscriptio
 import {
   SubscriptionMapper,
   SubscriptionResponseDto,
-} from "../../../domain/zodSchemaDto/output/subscriptionResponse.dto";
+} from "../../dto/subscriptionResponse.dto";
 
 export class UpdateSubscriptionPlanUseCase
   implements IUpdateSubscriptionPlanUseCase

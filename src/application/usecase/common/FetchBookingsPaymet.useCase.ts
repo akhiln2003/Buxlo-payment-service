@@ -1,12 +1,12 @@
-import { IpaymetRepository } from "../../../domain/interfaces/IpaymentRepository";
+import { IPaymetRepository } from "../../../domain/interfaces/IpaymentRepository";
 import {
   BookingPaymentMapper,
   BookingPaymentResponseDto,
-} from "../../../domain/zodSchemaDto/output/bookingPaymentResponse.dto";
+} from "../../dto/bookingPaymentResponse.dto";
 import { IFetchBookingsPaymetUseCase } from "../../interface/common/IFetchBookingsPaymetUseCase";
 
 export class FetchBookingsPaymetUseCase implements IFetchBookingsPaymetUseCase {
-  constructor(private _bookngPaymentRepository: IpaymetRepository) {}
+  constructor(private _bookngPaymentRepository: IPaymetRepository) {}
   async execute(
     id: string,
     page: number,
@@ -18,7 +18,6 @@ export class FetchBookingsPaymetUseCase implements IFetchBookingsPaymetUseCase {
       page,
       searchData
     );
-    console.log("_+_+_+_+_+_+_+ ", datas);
 
     return {
       bookings: datas.bookings.map((data) => BookingPaymentMapper.toDto(data)),

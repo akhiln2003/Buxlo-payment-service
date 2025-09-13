@@ -4,7 +4,7 @@ import { IFetchWalletUseCase } from "../../interface/common/IFetchWalletUseCase"
 import {
   WalletMapper,
   WalletResponseDto,
-} from "../../../domain/zodSchemaDto/output/walletResponse.dto";
+} from "../../dto/walletResponse.dto";
 
 export class FetchWalletUseCase implements IFetchWalletUseCase {
   constructor(private _walletRepo: IwalletRepository) {}

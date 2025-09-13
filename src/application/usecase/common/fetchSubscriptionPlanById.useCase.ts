@@ -2,7 +2,7 @@ import { IsubscriptionRepository } from "../../../domain/interfaces/Isubscriptio
 import {
   SubscriptionMapper,
   SubscriptionResponseDto,
-} from "../../../domain/zodSchemaDto/output/subscriptionResponse.dto";
+} from "../../dto/subscriptionResponse.dto";
 import { IFetchSubscriptionPlanByIdUseCase } from "../../interface/common/IFetchSubscriptionPlanByIdUseCase";
 
 export class FetchSubscriptionPlanByIdUseCase

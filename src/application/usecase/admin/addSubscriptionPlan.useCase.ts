@@ -7,7 +7,7 @@ import {
 import {
   SubscriptionMapper,
   SubscriptionResponseDto,
-} from "../../../domain/zodSchemaDto/output/subscriptionResponse.dto";
+} from "../../dto/subscriptionResponse.dto";
 
 export class AddSubscriptionPlanUseCase implements IAddSubscriptionPlanUseCase {
   constructor(private _subscriptionRepository: IsubscriptionRepository) {}

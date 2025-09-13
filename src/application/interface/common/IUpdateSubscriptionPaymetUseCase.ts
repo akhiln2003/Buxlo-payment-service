@@ -1,4 +1,4 @@
-import { SubscriptionPaymentResponseDto } from "../../../domain/zodSchemaDto/output/subscriptionPaymentResponse.dto";
+import { SubscriptionPaymentResponseDto } from "../../dto/subscriptionPaymentResponse.dto";
 import { PaymentStatus } from "../../../infrastructure/@types/enums/paymentStatus";
 
 export interface IUpdateSubscriptionPaymetUseCase {

@@ -4,6 +4,7 @@ import { SubscriptionEntity } from "./entity/subscription.entity";
 import { WalletEntity } from "./entity/wallet.entity";
 import { BookingPaymentEntity } from "./entity/bookingPayment.entity";
 import { SubscriptionPaymentEntity } from "./entity/subscriptionPayment.entity";
+import { PaymentHistoryEntity } from "./entity/paymentHistory.entity";
 
 // Initialize TypeORM DataSource
 const AppDataSource = new DataSource({
@@ -14,7 +15,13 @@ const AppDataSource = new DataSource({
   password: process.env.POSTGRES_PASSWORD as string,
   database: process.env.POSTGRES_DATABASE as string,
   logging: true,
-  entities: [SubscriptionEntity , WalletEntity , BookingPaymentEntity , SubscriptionPaymentEntity], 
+  entities: [
+    SubscriptionEntity,
+    WalletEntity,
+    BookingPaymentEntity,
+    SubscriptionPaymentEntity,
+    PaymentHistoryEntity,
+  ],
   synchronize: process.env.NODE_ENV !== "production",
 });
 

@@ -19,7 +19,6 @@ import { BookingPaymentRepository } from "../repositories/bookingPaymentReposita
 import { WebHookUseCase } from "../../application/usecase/webHook/webHook.useCase";
 import { IWebHookUseCase } from "../../application/interface/webHook/IWebHookUseCase";
 import { stripe } from "../external-services/stripe/stripe.config";
-import { TypeORMUnitOfWork } from "../repositories/typeORMUnitOfWork";
 import { IFetchOnePaymentUseCase } from "../../application/interface/common/IFetchOnePaymentUseCase";
 import { FetchOnePaymentUseCase } from "../../application/usecase/common/fetchOnePayment.useCase";
 import { SubscriptionPaymentRepository } from "../repositories/subscriptionPaymentRepository";
@@ -33,6 +32,7 @@ import { IFetchSubscriptionPlanByIdUseCase } from "../../application/interface/c
 import { FetchSubscriptionPlanByIdUseCase } from "../../application/usecase/common/fetchSubscriptionPlanById.useCase";
 import { FetchBookingsPaymetUseCase } from "../../application/usecase/common/FetchBookingsPaymet.useCase";
 import { IFetchBookingsPaymetUseCase } from "../../application/interface/common/IFetchBookingsPaymetUseCase";
+import { PaymentHistoryRepository } from "../repositories/paymentHistory.repositary";
 
 export class DIContainer {
   private _subscriptionPlanRepository: SubscriptionRepository;
@@ -40,7 +40,7 @@ export class DIContainer {
   private _stripeService: StripeService;
   private _bookngPaymentRepository: BookingPaymentRepository;
   private _subscriptionPaymentRepository: SubscriptionPaymentRepository;
-  private _typeORMUnitOfWork: TypeORMUnitOfWork;
+  private _paymentHistoryRepository: PaymentHistoryRepository;
 
   constructor() {
     this._subscriptionPlanRepository = new SubscriptionRepository();
@@ -48,7 +48,7 @@ export class DIContainer {
     this._stripeService = new StripeService();
     this._bookngPaymentRepository = new BookingPaymentRepository();
     this._subscriptionPaymentRepository = new SubscriptionPaymentRepository();
-    this._typeORMUnitOfWork = new TypeORMUnitOfWork();
+    this._paymentHistoryRepository = new PaymentHistoryRepository();
   }
 
   fetchSubscriptionPlanUseCase(): IFetchSubscriptionPlanUseCase {
@@ -84,14 +84,16 @@ export class DIContainer {
   createBookingCheckoutSessionUseCase(): ICreateBookingCheckoutSessionUseCase {
     return new CreateBookingCheckoutSessionUseCase(
       this._stripeService,
-      this._bookngPaymentRepository
+      this._bookngPaymentRepository,
+      this._paymentHistoryRepository
     );
   }
   createSubscriptionCheckoutSessionUseCase(): ICreateSubscriptionCheckoutSessionUseCase {
     return new CreateSubscriptionCheckoutSessionUseCase(
       this._stripeService,
       this._subscriptionPaymentRepository,
-      this._walletRepository
+      this._walletRepository,
+      this._paymentHistoryRepository
     );
   }
 
@@ -100,7 +102,8 @@ export class DIContainer {
       stripe,
       this._bookngPaymentRepository,
       this._subscriptionPaymentRepository,
-      this._subscriptionPlanRepository
+      this._subscriptionPlanRepository,
+      this._paymentHistoryRepository
     );
   }
 
@@ -109,7 +112,10 @@ export class DIContainer {
   }
 
   updateBookingPaymetUseCase(): IUpdateBookingPaymetUseCase {
-    return new UpdateBookingPaymetUseCase(this._bookngPaymentRepository);
+    return new UpdateBookingPaymetUseCase(
+      this._bookngPaymentRepository,
+      this._paymentHistoryRepository
+    );
   }
 
   fetchBookingsPaymetUseCase(): IFetchBookingsPaymetUseCase {
@@ -117,7 +123,8 @@ export class DIContainer {
   }
   updateSubscriptionPaymetUseCase(): IUpdateSubscriptionPaymetUseCase {
     return new UpdateSubscriptionPaymetUseCase(
-      this._subscriptionPaymentRepository
+      this._subscriptionPaymentRepository,
+      this._paymentHistoryRepository
     );
   }
 }

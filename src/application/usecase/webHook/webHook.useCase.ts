@@ -1,7 +1,7 @@
 import { PaymentStatus } from "../../../infrastructure/@types/enums/paymentStatus";
 import { IWebHookUseCase } from "../../interface/webHook/IWebHookUseCase";
 import Stripe from "stripe";
-import { IpaymetRepository } from "../../../domain/interfaces/IpaymentRepository";
+import { IPaymetRepository } from "../../../domain/interfaces/IpaymentRepository";
 import { IsubscriptionPaymentRepository } from "../../../domain/interfaces/IsubscriptionPaymentRepository";
 import {
   updateAvailability,
@@ -9,13 +9,15 @@ import {
   // updateSubscription,
 } from "../../../infrastructure/rpc/grpc/client";
 import { IsubscriptionRepository } from "../../../domain/interfaces/IsubscriptionRepository";
+import { IPaymentHistoryRepository } from "../../../domain/interfaces/IPaymentHistoryRepository";
 
 export class WebHookUseCase implements IWebHookUseCase {
   constructor(
     private _stripe: Stripe,
-    private _bookngPaymentRepository: IpaymetRepository,
+    private _bookngPaymentRepository: IPaymetRepository,
     private _subscriptionPaymentRepository: IsubscriptionPaymentRepository,
-    private _subscriptionPlanRepository: IsubscriptionRepository
+    private _subscriptionPlanRepository: IsubscriptionRepository,
+    private _paymentHistoryRepository: IPaymentHistoryRepository
   ) {}
   async execute(
     body: Buffer | string,
@@ -41,6 +43,14 @@ export class WebHookUseCase implements IWebHookUseCase {
               status: PaymentStatus.BOOKED,
             }
           );
+          const data = {
+            amount: paymentrepo.amount,
+            category: "slotBooking",
+            paymentId: paymentrepo.paymentId,
+            status: paymentrepo.status,
+            userId: paymentrepo.userId,
+          };
+          await this._paymentHistoryRepository.create(data);
           await updateAvailability({
             id: paymentrepo.slotId,
             status: "booked",
@@ -77,6 +87,14 @@ export class WebHookUseCase implements IWebHookUseCase {
               throw new Error("Invalid subscription plan duration");
           }
 
+          const data = {
+            amount: subscriptionPaymetrepo.amount,
+            category: "subscription",
+            paymentId: subscriptionPaymetrepo.paymentId,
+            status: subscriptionPaymetrepo.status,
+            userId: subscriptionPaymetrepo.userId,
+          };
+          await this._paymentHistoryRepository.create(data);
           await updateSubscription({
             userId: subscriptionPaymetrepo.userId,
             premiumId: subscriptionPaymetrepo.subscriptionId,
@@ -90,16 +108,37 @@ export class WebHookUseCase implements IWebHookUseCase {
         console.log("payment expired");
 
         if (type == "booking") {
-          await this._bookngPaymentRepository.update(event.data.object.id, {
-            status: PaymentStatus.FAILD,
-          });
-        } else {
-          await this._subscriptionPaymentRepository.update(
+          const paymentrepo = await this._bookngPaymentRepository.update(
             event.data.object.id,
             {
               status: PaymentStatus.FAILD,
             }
           );
+          const data = {
+            amount: paymentrepo.amount,
+            category: "slotBooking",
+            paymentId: paymentrepo.paymentId,
+            status: paymentrepo.status,
+            userId: paymentrepo.userId,
+          };
+          await this._paymentHistoryRepository.create(data);
+        } else {
+          const subscriptionPaymetrepo =
+            await this._subscriptionPaymentRepository.update(
+              event.data.object.id,
+              {
+                status: PaymentStatus.FAILD,
+              }
+            );
+
+          const data = {
+            amount: subscriptionPaymetrepo.amount,
+            category: "subscription",
+            paymentId: subscriptionPaymetrepo.paymentId,
+            status: subscriptionPaymetrepo.status,
+            userId: subscriptionPaymetrepo.userId,
+          };
+          await this._paymentHistoryRepository.create(data);
         }
         break;
       }
@@ -107,16 +146,38 @@ export class WebHookUseCase implements IWebHookUseCase {
         console.log("payment faild");
 
         if (type == "booking") {
-          await this._bookngPaymentRepository.update(event.data.object.id, {
-            status: PaymentStatus.FAILD,
-          });
-        } else {
-          await this._subscriptionPaymentRepository.update(
+          const paymentrepo = await this._bookngPaymentRepository.update(
             event.data.object.id,
             {
               status: PaymentStatus.FAILD,
             }
           );
+
+          const data = {
+            amount: paymentrepo.amount,
+            category: "slotBooking",
+            paymentId: paymentrepo.paymentId,
+            status: paymentrepo.status,
+            userId: paymentrepo.userId,
+          };
+          await this._paymentHistoryRepository.create(data);
+        } else {
+          const subscriptionPaymetrepo =
+            await this._subscriptionPaymentRepository.update(
+              event.data.object.id,
+              {
+                status: PaymentStatus.FAILD,
+              }
+            );
+
+          const data = {
+            amount: subscriptionPaymetrepo.amount,
+            category: "subscription",
+            paymentId: subscriptionPaymetrepo.paymentId,
+            status: subscriptionPaymetrepo.status,
+            userId: subscriptionPaymetrepo.userId,
+          };
+          await this._paymentHistoryRepository.create(data);
         }
         break;
       }

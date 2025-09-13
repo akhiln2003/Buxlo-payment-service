@@ -1,13 +1,13 @@
 import { BadRequest } from "@buxlo/common";
 import { IFetchOnePaymentUseCase } from "../../interface/common/IFetchOnePaymentUseCase";
-import { IpaymetRepository } from "../../../domain/interfaces/IpaymentRepository";
+import { IPaymetRepository } from "../../../domain/interfaces/IpaymentRepository";
 import {
   BookingPaymentMapper,
   BookingPaymentResponseDto,
-} from "../../../domain/zodSchemaDto/output/bookingPaymentResponse.dto";
+} from "../../dto/bookingPaymentResponse.dto";
 
 export class FetchOnePaymentUseCase implements IFetchOnePaymentUseCase {
-  constructor(private _paymetRepo: IpaymetRepository) {}
+  constructor(private _paymetRepo: IPaymetRepository) {}
   async execute(slotId: string): Promise<BookingPaymentResponseDto> {
     try {
       const data = await this._paymetRepo.findOne(slotId);

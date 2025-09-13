@@ -1,4 +1,4 @@
-import { BookingPaymentResponseDto } from "../../../domain/zodSchemaDto/output/bookingPaymentResponse.dto";
+import { BookingPaymentResponseDto } from "../../dto/bookingPaymentResponse.dto";
 
 export interface IFetchBookingsPaymetUseCase {
   execute(

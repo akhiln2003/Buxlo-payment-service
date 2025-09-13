@@ -1,41 +1,37 @@
 import { BadRequest } from "@buxlo/common";
 import { EntityManager, Repository } from "typeorm";
 import { AppDataSource } from "../database/sql/connection";
-import { IPaymetRepository } from "../../domain/interfaces/IpaymentRepository";
-import { BookingPaymentEntity } from "../database/sql/entity/bookingPayment.entity";
-import { Payment } from "../../domain/entities/bookingPayment.entites";
 import { PaymentStatus } from "../@types/enums/paymentStatus";
+import { IPaymentHistoryRepository } from "../../domain/interfaces/IPaymentHistoryRepository";
+import { PaymentHistoryEntity } from "../database/sql/entity/paymentHistory.entity";
+import { PaymentHistory } from "../../domain/entities/paymentHistory.entityes";
 
-export class BookingPaymentRepository implements IPaymetRepository {
-  private _repository: Repository<BookingPaymentEntity>;
+export class PaymentHistoryRepository implements IPaymentHistoryRepository {
+  private _repository: Repository<PaymentHistoryEntity>;
 
   constructor(private _manager?: EntityManager) {
     const repoManager = this._manager || AppDataSource.manager;
-    this._repository = repoManager.getRepository(BookingPaymentEntity);
+    this._repository = repoManager.getRepository(PaymentHistoryEntity);
   }
 
-  async create(data: Payment): Promise<Payment | boolean> {
+  async create(data: PaymentHistory): Promise<PaymentHistory> {
     try {
-      const existingPayment = await this._repository.findOne({
-        where: {
-          userId: data.userId,
-          status: PaymentStatus.PENDING,
-        },
-      });
-
-      if (existingPayment) {
-        return false;
-      }
-      const newPaymentEntity = this._repository.create(data);
-      const savedEntity = await this._repository.save(newPaymentEntity);
+      await this._repository.delete({ paymentId: data.paymentId });
+      const newPaymentHistory = this._repository.create(data);
+      const savedEntity = await this._repository.save(newPaymentHistory);
 
       return savedEntity;
     } catch (error: any) {
-      throw new BadRequest(`Failed to create payment: ${error.message}`);
+      throw new BadRequest(
+        `Failed to create payment history: ${error.message}`
+      );
     }
   }
 
-  async update(paymentId: string, data: Partial<Payment>): Promise<Payment> {
+  async update(
+    paymentId: string,
+    data: Partial<PaymentHistory>
+  ): Promise<PaymentHistory> {
     try {
       const paymentEntity = await this._repository.findOneBy({ paymentId });
 
@@ -51,8 +47,8 @@ export class BookingPaymentRepository implements IPaymetRepository {
   }
   async findByIdAndUpdate(
     id: string,
-    data: Partial<Payment>
-  ): Promise<Payment> {
+    data: Partial<PaymentHistory>
+  ): Promise<PaymentHistory> {
     try {
       const paymentEntity = await this._repository.findOneBy({ id });
 
@@ -67,26 +63,26 @@ export class BookingPaymentRepository implements IPaymetRepository {
     }
   }
 
-  async findOne(slotId: string): Promise<Payment> {
-    try {
-      const paymentEntity = await this._repository.findOneBy({ slotId });
+  //   async findOne(slotId: string): Promise<PaymentHistory> {
+  //     try {
+  //       const paymentEntity = await this._repository.findOneBy({ slotId });
 
-      if (!paymentEntity) {
-        throw new BadRequest("Payment not found");
-      }
+  //       if (!paymentEntity) {
+  //         throw new BadRequest("Payment not found");
+  //       }
 
-      return paymentEntity;
-    } catch (error: any) {
-      throw new BadRequest(`Failed to fetch payment: ${error.message}`);
-    }
-  }
+  //       return paymentEntity;
+  //     } catch (error: any) {
+  //       throw new BadRequest(`Failed to fetch payment: ${error.message}`);
+  //     }
+  //   }
 
   async findAll(
     id: string,
     role: "user" | "mentor",
     page: number = 1,
     searchData?: string
-  ): Promise<{ bookings: Payment[]; totalPages: number }> {
+  ): Promise<{ bookings: PaymentHistory[]; totalPages: number }> {
     try {
       const limit = 10;
       const skip = (page - 1) * limit;
@@ -119,18 +115,18 @@ export class BookingPaymentRepository implements IPaymetRepository {
     }
   }
 
-  async cancelPendingPaymentsByUser(userId: string): Promise<Payment[]> {
+  async cancelPendingPaymentsByUser(userId: string): Promise<PaymentHistory[]> {
     const pendingPayments = await this._repository.find({
       where: { userId, status: PaymentStatus.PENDING },
     });
 
-    const updatedPayments: Payment[] = [];
+    const updatedPayments: PaymentHistory[] = [];
 
     for (const payment of pendingPayments) {
       payment.status = PaymentStatus.FAILD;
       updatedPayments.push(await this._repository.save(payment));
     }
 
-    return updatedPayments; 
+    return updatedPayments;
   }
 }
