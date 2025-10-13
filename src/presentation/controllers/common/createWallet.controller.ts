@@ -3,11 +3,11 @@ import { ICreateWalletUseCase } from "../../../application/interface/common/ICre
 import HttpStatusCode from "@buxlo/common/build/common/httpStatusCode";
 
 export class CreateWalletController {
-  constructor(public createWalletUseCase: ICreateWalletUseCase) {}
+  constructor(private _createWalletUseCase: ICreateWalletUseCase) {}
   create = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { data } = req.body;
-      const newWallet = await this.createWalletUseCase.execute(data);
+      const newWallet = await this._createWalletUseCase.execute(data);
       res.status(HttpStatusCode.OK).json({ newWallet });
     } catch (error) {
       next(error);

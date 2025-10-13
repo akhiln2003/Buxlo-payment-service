@@ -10,6 +10,8 @@ import {
 } from "../../../infrastructure/rpc/grpc/client";
 import { IsubscriptionRepository } from "../../../domain/interfaces/IsubscriptionRepository";
 import { IPaymentHistoryRepository } from "../../../domain/interfaces/IPaymentHistoryRepository";
+import { PaymentHistoryStatus } from "../../../infrastructure/@types/enums/PaymentHistoryStatus";
+import { PaymentType } from "../../../infrastructure/@types/enums/PaymentType";
 
 export class WebHookUseCase implements IWebHookUseCase {
   constructor(
@@ -24,6 +26,24 @@ export class WebHookUseCase implements IWebHookUseCase {
     sig: string | string[] | undefined,
     stripeSecret: string
   ): Promise<void> {
+    const mapPaymentStatusToHistoryStatus = (
+      status: PaymentStatus
+    ): PaymentHistoryStatus => {
+      switch (status) {
+        case PaymentStatus.BOOKED:
+          return PaymentHistoryStatus.COMPLETED;
+        case PaymentStatus.CANCELED:
+          return PaymentHistoryStatus.FAILD;
+        case PaymentStatus.PENDING:
+          return PaymentHistoryStatus.PENDING;
+        case PaymentStatus.FAILD:
+          return PaymentHistoryStatus.FAILD;
+        case PaymentStatus.AVAILABLE:
+          return PaymentHistoryStatus.PENDING; // or COMPLETED depending on your logic
+        default:
+          throw new Error(`Unknown PaymentStatus: ${status}`);
+      }
+    };
     const event = this._stripe.webhooks.constructEvent(
       body,
       sig as string,
@@ -47,7 +67,12 @@ export class WebHookUseCase implements IWebHookUseCase {
             amount: paymentrepo.amount,
             category: "slotBooking",
             paymentId: paymentrepo.paymentId,
-            status: paymentrepo.status,
+            type: PaymentType.DEBIT,
+            status: mapPaymentStatusToHistoryStatus(
+              paymentrepo.status != PaymentStatus.AVAILABLE
+                ? paymentrepo.status
+                : PaymentStatus.PENDING
+            ),
             userId: paymentrepo.userId,
           };
           await this._paymentHistoryRepository.create(data);
@@ -91,7 +116,12 @@ export class WebHookUseCase implements IWebHookUseCase {
             amount: subscriptionPaymetrepo.amount,
             category: "subscription",
             paymentId: subscriptionPaymetrepo.paymentId,
-            status: subscriptionPaymetrepo.status,
+            type: PaymentType.DEBIT,
+            status: mapPaymentStatusToHistoryStatus(
+              subscriptionPaymetrepo.status != PaymentStatus.AVAILABLE
+                ? subscriptionPaymetrepo.status
+                : PaymentStatus.PENDING
+            ),
             userId: subscriptionPaymetrepo.userId,
           };
           await this._paymentHistoryRepository.create(data);
@@ -118,7 +148,12 @@ export class WebHookUseCase implements IWebHookUseCase {
             amount: paymentrepo.amount,
             category: "slotBooking",
             paymentId: paymentrepo.paymentId,
-            status: paymentrepo.status,
+            type: PaymentType.DEBIT,
+            status: mapPaymentStatusToHistoryStatus(
+              paymentrepo.status != PaymentStatus.AVAILABLE
+                ? paymentrepo.status
+                : PaymentStatus.PENDING
+            ),
             userId: paymentrepo.userId,
           };
           await this._paymentHistoryRepository.create(data);
@@ -135,7 +170,12 @@ export class WebHookUseCase implements IWebHookUseCase {
             amount: subscriptionPaymetrepo.amount,
             category: "subscription",
             paymentId: subscriptionPaymetrepo.paymentId,
-            status: subscriptionPaymetrepo.status,
+            type: PaymentType.DEBIT,
+            status: mapPaymentStatusToHistoryStatus(
+              subscriptionPaymetrepo.status != PaymentStatus.AVAILABLE
+                ? subscriptionPaymetrepo.status
+                : PaymentStatus.PENDING
+            ),
             userId: subscriptionPaymetrepo.userId,
           };
           await this._paymentHistoryRepository.create(data);
@@ -157,7 +197,12 @@ export class WebHookUseCase implements IWebHookUseCase {
             amount: paymentrepo.amount,
             category: "slotBooking",
             paymentId: paymentrepo.paymentId,
-            status: paymentrepo.status,
+            type: PaymentType.DEBIT,
+            status: mapPaymentStatusToHistoryStatus(
+              paymentrepo.status != PaymentStatus.AVAILABLE
+                ? paymentrepo.status
+                : PaymentStatus.PENDING
+            ),
             userId: paymentrepo.userId,
           };
           await this._paymentHistoryRepository.create(data);
@@ -174,7 +219,12 @@ export class WebHookUseCase implements IWebHookUseCase {
             amount: subscriptionPaymetrepo.amount,
             category: "subscription",
             paymentId: subscriptionPaymetrepo.paymentId,
-            status: subscriptionPaymetrepo.status,
+            type: PaymentType.DEBIT,
+            status: mapPaymentStatusToHistoryStatus(
+              subscriptionPaymetrepo.status != PaymentStatus.AVAILABLE
+                ? subscriptionPaymetrepo.status
+                : PaymentStatus.PENDING
+            ),
             userId: subscriptionPaymetrepo.userId,
           };
           await this._paymentHistoryRepository.create(data);

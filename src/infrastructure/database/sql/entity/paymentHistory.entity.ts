@@ -5,7 +5,8 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { PaymentStatus } from "../../../@types/enums/paymentStatus";
+import { PaymentHistoryStatus } from "../../../@types/enums/PaymentHistoryStatus";
+import { PaymentType } from "../../../@types/enums/PaymentType";
 
 @Entity("paymentHistorys")
 export class PaymentHistoryEntity {
@@ -18,18 +19,22 @@ export class PaymentHistoryEntity {
   })
   userId: string;
 
-
-
   @Column({ type: "decimal" })
   amount: number;
 
   @Column({
     type: "enum",
-    enum: PaymentStatus,
+    enum: PaymentType,
   })
-  status: PaymentStatus;
+  type: PaymentType;
 
-  @Column({ unique: true  })
+  @Column({
+    type: "enum",
+    enum: PaymentHistoryStatus,
+  })
+  status: PaymentHistoryStatus;
+
+  @Column()
   paymentId: string;
 
   @Column({

@@ -33,6 +33,14 @@ import { FetchSubscriptionPlanByIdUseCase } from "../../application/usecase/comm
 import { FetchBookingsPaymetUseCase } from "../../application/usecase/common/FetchBookingsPaymet.useCase";
 import { IFetchBookingsPaymetUseCase } from "../../application/interface/common/IFetchBookingsPaymetUseCase";
 import { PaymentHistoryRepository } from "../repositories/paymentHistory.repositary";
+import { FetchPaymetHistorysUseCase } from "../../application/usecase/common/fetchPaymetHistorys.useCase";
+import { IFetchPaymetHistorysUseCase } from "../../application/interface/common/IFetchPaymetHistorysUseCase";
+import { IAddPaymentHistoryUseCase } from "../../application/interface/common/IAddPaymentHistoryUseCase";
+import { AddPaymentHistoryUseCase } from "../../application/usecase/common/addPaymetHistory.useCase";
+import { IUploadBankStatementUseCase } from "../../application/interface/common/IUploadBankStatementUseCase";
+import { UploadBankStatementUseCase } from "../../application/usecase/common/uploadBankStatement.useCase";
+import { ICancelBookingsPaymetUseCase } from "../../application/interface/common/ICancelBookingsPaymetUseCase";
+import { CancelBookingsPaymetUseCase } from "../../application/usecase/common/cancelBookingsPaymet.useCase";
 
 export class DIContainer {
   private _subscriptionPlanRepository: SubscriptionRepository;
@@ -121,10 +129,28 @@ export class DIContainer {
   fetchBookingsPaymetUseCase(): IFetchBookingsPaymetUseCase {
     return new FetchBookingsPaymetUseCase(this._bookngPaymentRepository);
   }
+
+  cancelBookingsPaymetUseCase(): ICancelBookingsPaymetUseCase {
+    return new CancelBookingsPaymetUseCase(
+      this._bookngPaymentRepository,
+      this._walletRepository
+    );
+  }
+
   updateSubscriptionPaymetUseCase(): IUpdateSubscriptionPaymetUseCase {
     return new UpdateSubscriptionPaymetUseCase(
       this._subscriptionPaymentRepository,
       this._paymentHistoryRepository
     );
+  }
+  fetchPaymetHistorysUseCase(): IFetchPaymetHistorysUseCase {
+    return new FetchPaymetHistorysUseCase(this._paymentHistoryRepository);
+  }
+  addPaymentHistoryUseCase(): IAddPaymentHistoryUseCase {
+    return new AddPaymentHistoryUseCase(this._paymentHistoryRepository);
+  }
+
+  uploadBankStatementUseCase(): IUploadBankStatementUseCase {
+    return new UploadBankStatementUseCase(this._paymentHistoryRepository);
   }
 }

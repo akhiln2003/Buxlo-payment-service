@@ -1,10 +1,10 @@
 import { BadRequest } from "@buxlo/common";
 import { EntityManager, Repository } from "typeorm";
 import { AppDataSource } from "../database/sql/connection";
-import { PaymentStatus } from "../@types/enums/paymentStatus";
 import { IPaymentHistoryRepository } from "../../domain/interfaces/IPaymentHistoryRepository";
 import { PaymentHistoryEntity } from "../database/sql/entity/paymentHistory.entity";
 import { PaymentHistory } from "../../domain/entities/paymentHistory.entityes";
+import { PaymentHistoryStatus } from "../@types/enums/PaymentHistoryStatus";
 
 export class PaymentHistoryRepository implements IPaymentHistoryRepository {
   private _repository: Repository<PaymentHistoryEntity>;
@@ -78,28 +78,32 @@ export class PaymentHistoryRepository implements IPaymentHistoryRepository {
   //   }
 
   async findAll(
-    id: string,
-    role: "user" | "mentor",
+    userId: string,
     page: number = 1,
+    status: PaymentHistoryStatus | "all" = "all",
     searchData?: string
-  ): Promise<{ bookings: PaymentHistory[]; totalPages: number }> {
+  ): Promise<{ datas: PaymentHistory[]; totalPages: number }> {
     try {
       const limit = 10;
       const skip = (page - 1) * limit;
 
-      // Build query
       const query = this._repository.createQueryBuilder("payment");
 
-      if (role === "user") {
-        query.where("payment.userId = :id", { id });
-      } else {
-        query.where("payment.mentorId = :id", { id });
+      // always filter by userId
+      query.where("payment.userId = :userId", { userId });
+
+      // filter by status (if not "all")
+      if (status !== "all") {
+        query.andWhere("payment.status = :status", { status });
       }
 
-      // Search filter (by referenceId or status or amount or category)
+      // search filter
       if (searchData && searchData.trim() !== "") {
         query.andWhere(
-          "(payment.referenceId ILIKE :search OR payment.status ILIKE :search OR CAST(payment.amount AS TEXT) ILIKE :search OR payment.category ILIKE :search)",
+          `(payment.paymentId ILIKE :search 
+      OR payment.status ILIKE :search 
+      OR CAST(payment.amount AS TEXT) ILIKE :search 
+      OR payment.category ILIKE :search)`,
           { search: `%${searchData}%` }
         );
       }
@@ -109,7 +113,7 @@ export class PaymentHistoryRepository implements IPaymentHistoryRepository {
       const [payments, totalCount] = await query.getManyAndCount();
       const totalPages = Math.ceil(totalCount / limit);
 
-      return { bookings: payments, totalPages };
+      return { datas: payments, totalPages };
     } catch (error: any) {
       throw new BadRequest(`Failed to fetch payments: ${error.message}`);
     }
@@ -117,13 +121,13 @@ export class PaymentHistoryRepository implements IPaymentHistoryRepository {
 
   async cancelPendingPaymentsByUser(userId: string): Promise<PaymentHistory[]> {
     const pendingPayments = await this._repository.find({
-      where: { userId, status: PaymentStatus.PENDING },
+      where: { userId, status: PaymentHistoryStatus.PENDING },
     });
 
     const updatedPayments: PaymentHistory[] = [];
 
     for (const payment of pendingPayments) {
-      payment.status = PaymentStatus.FAILD;
+      payment.status = PaymentHistoryStatus.FAILD;
       updatedPayments.push(await this._repository.save(payment));
     }
 

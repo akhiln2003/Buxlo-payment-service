@@ -37,9 +37,12 @@ export class WalletRepository implements IwalletRepository {
           `Wallet not found for user ${userId} with name ${name}`
         );
       }
+      const newBalance = (Number(wallet.balance) || 0) + (Number(data.balance) || 0);
 
-      await this._repository.update(wallet.id, data);
-
+      await this._repository.update(wallet.id, {
+        ...data,
+        balance: newBalance,
+      });
       return await this._repository.findOneOrFail({
         where: { id: wallet.id },
       });

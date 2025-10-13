@@ -7,6 +7,8 @@ import {
   ICreateCheckoutSessionUseCaseDataProps,
 } from "../../interface/common/ICreateCheckoutSessionUseCase";
 import { IPaymentHistoryRepository } from "../../../domain/interfaces/IPaymentHistoryRepository";
+import { PaymentHistoryStatus } from "../../../infrastructure/@types/enums/PaymentHistoryStatus";
+import { PaymentType } from "../../../infrastructure/@types/enums/PaymentType";
 
 export class CreateBookingCheckoutSessionUseCase
   implements ICreateBookingCheckoutSessionUseCase
@@ -24,13 +26,37 @@ export class CreateBookingCheckoutSessionUseCase
     const pendingPayments = await this._paymentRepo.cancelPendingPaymentsByUser(
       userId as string
     );
+    const mapPaymentStatusToHistoryStatus = (
+      status: PaymentStatus
+    ): PaymentHistoryStatus => {
+      switch (status) {
+        case PaymentStatus.BOOKED:
+          return PaymentHistoryStatus.COMPLETED;
+        case PaymentStatus.CANCELED:
+          return PaymentHistoryStatus.FAILD;
+        case PaymentStatus.PENDING:
+          return PaymentHistoryStatus.PENDING;
+        case PaymentStatus.FAILD:
+          return PaymentHistoryStatus.FAILD;
+        case PaymentStatus.AVAILABLE:
+          return PaymentHistoryStatus.PENDING; // or COMPLETED depending on your logic
+        default:
+          throw new Error(`Unknown PaymentStatus: ${status}`);
+      }
+    };
+
     await Promise.all(
       pendingPayments.map(async (payment) => {
         const historyData = {
           amount: payment.amount,
           category: "slotBooking",
           paymentId: payment.paymentId,
-          status: payment.status,
+          type:PaymentType.DEBIT,
+          status: mapPaymentStatusToHistoryStatus(
+            payment.status != PaymentStatus.AVAILABLE
+              ? payment.status
+              : PaymentStatus.PENDING
+          ),
           userId: payment.userId,
         };
 

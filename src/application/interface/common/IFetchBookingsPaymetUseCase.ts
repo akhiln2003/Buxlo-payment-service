@@ -1,9 +1,10 @@
+import { PaymentStatus } from "../../../infrastructure/@types/enums/paymentStatus";
 import { BookingPaymentResponseDto } from "../../dto/bookingPaymentResponse.dto";
 
 export interface IFetchBookingsPaymetUseCase {
   execute(
-    id: string,
+    userId: string,
     page: number,
-    searchData?: string
+    status: PaymentStatus | "all"
   ): Promise<{ bookings: BookingPaymentResponseDto[]; totalPages: number }>;
 }

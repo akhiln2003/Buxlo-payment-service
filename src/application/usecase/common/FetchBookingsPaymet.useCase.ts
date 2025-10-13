@@ -1,4 +1,5 @@
 import { IPaymetRepository } from "../../../domain/interfaces/IpaymentRepository";
+import { PaymentStatus } from "../../../infrastructure/@types/enums/paymentStatus";
 import {
   BookingPaymentMapper,
   BookingPaymentResponseDto,
@@ -10,15 +11,13 @@ export class FetchBookingsPaymetUseCase implements IFetchBookingsPaymetUseCase {
   async execute(
     id: string,
     page: number,
-    searchData?: string
+    status: PaymentStatus | "all" = "all"
   ): Promise<{ bookings: BookingPaymentResponseDto[]; totalPages: number }> {
-    const datas = await this._bookngPaymentRepository.findAll(
+    const datas = await this._bookngPaymentRepository.findByUserId(
       id,
-      "user",
       page,
-      searchData
+      status
     );
-
     return {
       bookings: datas.bookings.map((data) => BookingPaymentMapper.toDto(data)),
       totalPages: datas.totalPages,

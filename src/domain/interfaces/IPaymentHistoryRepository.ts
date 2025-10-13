@@ -1,7 +1,8 @@
+import { PaymentHistoryStatus } from "../../infrastructure/@types/enums/PaymentHistoryStatus";
 import { PaymentHistory } from "../entities/paymentHistory.entityes";
 
 export interface IPaymentHistoryRepository {
-  create(data: PaymentHistory): Promise<PaymentHistory | boolean>;
+  create(data: PaymentHistory): Promise<PaymentHistory>;
   update(
     paymentId: string,
     data: Partial<PaymentHistory>
@@ -13,10 +14,10 @@ export interface IPaymentHistoryRepository {
   //   findOne(slotId: string): Promise<PaymentHistory>;
 
   findAll(
-    id: string,
-    role: "user" | "mentor",
+    userId: string,
     page: number,
+    status: PaymentHistoryStatus | "all",
     searchData?: string
-  ): Promise<{ bookings: PaymentHistory[]; totalPages: number }>;
+  ): Promise<{ datas: PaymentHistory[]; totalPages: number }>;
   cancelPendingPaymentsByUser(userId: string): Promise<PaymentHistory[]>;
 }

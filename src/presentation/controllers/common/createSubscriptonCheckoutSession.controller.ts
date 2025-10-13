@@ -4,11 +4,11 @@ import { ICreateSubscriptionCheckoutSessionUseCase } from "../../../application/
 
 export class CreateSubscriptionCheckoutSessionController {
   constructor(
-    public createCheckoutSessionUseCase: ICreateSubscriptionCheckoutSessionUseCase
+    private _createCheckoutSessionUseCase: ICreateSubscriptionCheckoutSessionUseCase
   ) {}
   create = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const url = await this.createCheckoutSessionUseCase.execute(
+      const url = await this._createCheckoutSessionUseCase.execute(
         req.body,
         req.params.userId,
         req.params.type as "booking" | "subscription"

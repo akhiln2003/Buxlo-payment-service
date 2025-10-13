@@ -103,7 +103,7 @@ export class BookingPaymentRepository implements IPaymetRepository {
       // Search filter (by referenceId or status or amount or category)
       if (searchData && searchData.trim() !== "") {
         query.andWhere(
-          "(payment.referenceId ILIKE :search OR payment.status ILIKE :search OR CAST(payment.amount AS TEXT) ILIKE :search OR payment.category ILIKE :search)",
+          "(payment.status ILIKE :search OR CAST(payment.amount AS TEXT) ILIKE :search OR payment.paymentId ILIKE :search)",
           { search: `%${searchData}%` }
         );
       }
@@ -114,6 +114,36 @@ export class BookingPaymentRepository implements IPaymetRepository {
       const totalPages = Math.ceil(totalCount / limit);
 
       return { bookings: payments, totalPages };
+    } catch (error: any) {
+      throw new BadRequest(`Failed to fetch payments: ${error.message}`);
+    }
+  }
+
+  async findByUserId(
+    userId: string,
+    page: number = 1,
+    status: PaymentStatus | "all" = "all"
+  ): Promise<{ bookings: Payment[]; totalPages: number }> {
+    try {
+      const limit = 10;
+      const skip = (page - 1) * limit;
+
+      const query = this._repository
+        .createQueryBuilder("payment")
+        .where("payment.userId = :userId", { userId })
+        .skip(skip)
+        .take(limit)
+        .orderBy("payment.transactionDate", "DESC");
+
+      if (status !== "all") {
+        query.andWhere("payment.status = :status", { status });
+      }
+      // Execute both query and count for pagination
+      const [bookings, totalCount] = await query.getManyAndCount();
+
+      const totalPages = Math.ceil(totalCount / limit);
+
+      return { bookings, totalPages };
     } catch (error: any) {
       throw new BadRequest(`Failed to fetch payments: ${error.message}`);
     }
@@ -131,6 +161,24 @@ export class BookingPaymentRepository implements IPaymetRepository {
       updatedPayments.push(await this._repository.save(payment));
     }
 
-    return updatedPayments; 
+    return updatedPayments;
+  }
+
+  async cancelBooking(id: string): Promise<Payment> {
+    try {
+      const payment = await this._repository.findOneBy({ id });
+
+      if (!payment) {
+        throw new BadRequest(" Faild canclel booking. Booking not found");
+      }
+
+      payment.status = PaymentStatus.CANCELED;
+
+      const updatedPayment = await this._repository.save(payment);
+
+      return updatedPayment;
+    } catch (error: any) {
+      throw new BadRequest(`Failed to cancel booking: ${error.message}`);
+    }
   }
 }
