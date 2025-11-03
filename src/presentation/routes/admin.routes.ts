@@ -2,6 +2,7 @@ import { Router } from "express";
 import { DIContainer } from "../../infrastructure/di/DIContainer";
 import { UpdateSubscriptionPlanController } from "../controllers/admin/updateSubscriptionPlan.controller";
 import { AddSubscriptionPlanController } from "../controllers/admin/addSubscriptionPlan.controller";
+import { FetchIncomeSummeryController } from "../controllers/admin/fetchIncomeSummery.controller";
 
 export class AdminRouter {
   private _router: Router;
@@ -9,7 +10,7 @@ export class AdminRouter {
 
   private _addSubscriptionPlanController!: AddSubscriptionPlanController;
   private _updateSubscriptionPlanController!: UpdateSubscriptionPlanController;
-
+  private _fetchIncomeSummeryController!: FetchIncomeSummeryController;
   constructor() {
     this._router = Router();
     this._diContainer = new DIContainer();
@@ -26,6 +27,9 @@ export class AdminRouter {
     this._addSubscriptionPlanController = new AddSubscriptionPlanController(
       this._diContainer.addSubscriptionPlanUseCase()
     );
+    this._fetchIncomeSummeryController = new FetchIncomeSummeryController(
+      this._diContainer.fetchIncomeSummeryUseCase()
+    );
   }
 
   private _initializeRoutes(): void {
@@ -36,6 +40,10 @@ export class AdminRouter {
     this._router.put(
       "/updatesubscriptionplan",
       this._updateSubscriptionPlanController.update
+    );
+    this._router.get(
+      "/fetchincomsummery",
+      this._fetchIncomeSummeryController.fetch
     );
   }
 

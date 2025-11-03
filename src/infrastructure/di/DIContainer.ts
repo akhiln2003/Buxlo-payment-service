@@ -41,6 +41,10 @@ import { IUploadBankStatementUseCase } from "../../application/interface/common/
 import { UploadBankStatementUseCase } from "../../application/usecase/common/uploadBankStatement.useCase";
 import { ICancelBookingsPaymetUseCase } from "../../application/interface/common/ICancelBookingsPaymetUseCase";
 import { CancelBookingsPaymetUseCase } from "../../application/usecase/common/cancelBookingsPaymet.useCase";
+import { FetchPaymentHistorySummaryUseCase } from "../../application/usecase/user/fetchPaymentHistorySummary.useCase";
+import { IFetchPaymentHistorySummaryUseCase } from "../../application/interface/user/IFetchPaymentHistorySummaryUseCase";
+import { IFetchIncomeSummeryUseCase } from "../../application/interface/admin/IFetchIncomeSummeryUseCase";
+import { FetchIncomeSummeryUseCase } from "../../application/usecase/admin/fetchIncomeSummery.useCase";
 
 export class DIContainer {
   private _subscriptionPlanRepository: SubscriptionRepository;
@@ -152,5 +156,15 @@ export class DIContainer {
 
   uploadBankStatementUseCase(): IUploadBankStatementUseCase {
     return new UploadBankStatementUseCase(this._paymentHistoryRepository);
+  }
+
+  fetchPaymentHistorySummaryUseCase(): IFetchPaymentHistorySummaryUseCase {
+    return new FetchPaymentHistorySummaryUseCase(
+      this._paymentHistoryRepository
+    );
+  }
+
+  fetchIncomeSummeryUseCase(): IFetchIncomeSummeryUseCase {
+    return new FetchIncomeSummeryUseCase(this._subscriptionPaymentRepository);
   }
 }

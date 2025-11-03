@@ -12,4 +12,11 @@ export interface IsubscriptionPaymentRepository {
   ): Promise<SubscriptionPayment>;
 
   cancelPendingPaymentsByUser(userId: string): Promise<SubscriptionPayment[]>;
+  getSummery(): Promise<{
+    totalIncome: number;
+    incomeData: {
+      month: string;
+      count: number;
+    }[];
+  }>;
 }

@@ -8,6 +8,7 @@ import {
   disconnectDB,
 } from "./infrastructure/database/sql/connection";
 import { messageBroker } from "./infrastructure/MessageBroker/config";
+import { UserRouter } from "./presentation/routes/user.routes";
 
 export class App {
   constructor(private _server: IServer) {}
@@ -26,9 +27,11 @@ export class App {
   private _registerRoutes(): void {
     const adminRoutes = new AdminRouter().getRouter();
     const commonRoutes = new CommonRouter().getRouter();
-
+    const userRoutes = new UserRouter().getRouter();
+    
     this._server.registerRoutes("/api/payment/admin", adminRoutes);
     this._server.registerRoutes("/api/payment/common", commonRoutes);
+    this._server.registerRoutes("/api/payment/user", userRoutes);
   }
 
   private _registerErrorHandler(): void {

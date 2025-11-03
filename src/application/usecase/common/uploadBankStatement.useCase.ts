@@ -32,7 +32,6 @@ export class UploadBankStatementUseCase implements IUploadBankStatementUseCase {
         : await this.parseCSVBuffer(file.buffer);
 
       if (!rows.length) throw new BadRequest("Uploaded CSV is empty");
-      console.log("Parsed rows:", rows);
 
       // Step 2: Validate & map
       const records = rows.map((row) => {
@@ -60,27 +59,25 @@ export class UploadBankStatementUseCase implements IUploadBankStatementUseCase {
 
         const paymentId = row["Ref No."] || row["PaymentID"] || crypto.randomUUID();
         const type = credit > 0 ? PaymentType.CREDIT : PaymentType.DEBIT;
-        const category = type === PaymentType.CREDIT ? "Credit" : "Debit";
+        const category = "expenses";
 
         return {
           paymentId,
           userId,
           amount,
-          category,
+          category:category.toLocaleLowerCase(),
           status: PaymentHistoryStatus.COMPLETED,
           type,
           transactionDate,
         };
       });
 
-      console.log("Mapped Records:", records);
 
       // Step 3: Save all records
       const savedRecords = await Promise.all(
         records.map((record) => this._paymentHistoryRepository.create(record))
       );
 
-      console.log("Saved Records:", savedRecords);
 
       // Step 4: Return DTOs for all
       return savedRecords.map((rec) => PaymentHistoryMapper.toDto(rec));

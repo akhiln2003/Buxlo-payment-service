@@ -30,7 +30,6 @@ export class CancelBookingsPaymetUseCase
       return "Canceled booking";
     } catch (error) {
       console.error("Error from createWalletUseCase :", error);
-
       throw new BadRequest("Faild to create Wallet");
     }
   }

@@ -33,19 +33,24 @@ export const subscriptionClient = new paymentProto.SubscriptionService(
   process.env.GRPC_SUBSCRIPTION_SERVER || "buxlo-user:50052",
   grpc.credentials.createInsecure()
 );
-
 export const updateAvailability = (
   updateData: UpdateAvailabilityRequest
 ): Promise<UpdateAvailabilityResponse> => {
   return new Promise((res, rej) => {
-    client.UpdateAvailability(updateData, (error: any, response: any) => {
-      if (error) {
-        console.error("gRPC Error:", error);
-        return rej(error);
+    const deadline = new Date(Date.now() + 5000); // 5s deadline
+
+    client.UpdateAvailability(
+      updateData,
+      { deadline },
+      (error: any, response: any) => {
+        if (error) {
+          console.error("gRPC Error:", error);
+          return rej(error);
+        }
+        console.log("gRPC Response:", response);
+        res(response);
       }
-      console.log("gRPC Response:", response);
-      res(response);
-    });
+    );
   });
 };
 

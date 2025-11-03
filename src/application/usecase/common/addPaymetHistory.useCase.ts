@@ -15,6 +15,7 @@ export class AddPaymentHistoryUseCase implements IAddPaymentHistoryUseCase {
     data: IAddPaymentHistoryUseCaseProps
   ): Promise<PaymentHistoryResponseDto> {
     try {
+      data.category = data.category.toLowerCase();
       const newData = await this._paymentHistoryRepository.create(data);
       return PaymentHistoryMapper.toDto(newData);
     } catch (error) {

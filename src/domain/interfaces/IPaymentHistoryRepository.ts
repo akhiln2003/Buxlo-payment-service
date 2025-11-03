@@ -11,7 +11,6 @@ export interface IPaymentHistoryRepository {
     id: string,
     data: Partial<PaymentHistory>
   ): Promise<PaymentHistory>;
-  //   findOne(slotId: string): Promise<PaymentHistory>;
 
   findAll(
     userId: string,
@@ -20,4 +19,18 @@ export interface IPaymentHistoryRepository {
     searchData?: string
   ): Promise<{ datas: PaymentHistory[]; totalPages: number }>;
   cancelPendingPaymentsByUser(userId: string): Promise<PaymentHistory[]>;
+  getPaymentSummary(
+    userId: string,
+    year?: string,
+    startMonth?: string,
+    startDate?: string,
+    endDate?: string
+  ): Promise<{
+    totalCredit: number;
+    totalDebit: number;
+    categoryWise: {
+      category: string;
+      totalDebit: number;
+    }[];
+  }>
 }

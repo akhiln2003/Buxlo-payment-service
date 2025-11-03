@@ -5,7 +5,7 @@ export const SubscriptionResponseDto = z.object({
   id: z.string().uuid(),
   price: z.number(),
   offer: z.number(),
-  type: z.enum(["Day", "Month", "Year"]),
+  type: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });

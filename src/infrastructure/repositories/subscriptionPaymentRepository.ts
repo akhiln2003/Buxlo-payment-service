@@ -81,4 +81,58 @@ export class SubscriptionPaymentRepository
 
     return updatedPayments;
   }
+
+  async getSummery(): Promise<{
+    totalIncome: number;
+    incomeData: { month: string; count: number }[];
+  }> {
+    try {
+      const totalResult = await this._repository
+        .createQueryBuilder("payment")
+        .select("SUM(payment.amount)", "total")
+        .where("payment.status = :status", { status: PaymentStatus.BOOKED })
+        .getRawOne();
+
+      const totalIncome = parseFloat(totalResult?.total || "0");
+
+      const monthlyResult = await this._repository
+        .createQueryBuilder("payment")
+        .select("EXTRACT(MONTH FROM payment.transactionDate)", "month")
+        .addSelect("SUM(payment.amount)", "count")
+        .where("payment.status = :status", { status: PaymentStatus.BOOKED })
+        .groupBy("month")
+        .orderBy("month", "ASC")
+        .getRawMany();
+
+      // ✅ 3️⃣ Month names array
+      const monthNames = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+
+      const monthMap = new Map<number, number>();
+      monthlyResult.forEach((row) => {
+        monthMap.set(parseInt(row.month), parseFloat(row.count));
+      });
+
+      const incomeData = monthNames.map((name, i) => ({
+        month: name,
+        count: monthMap.get(i + 1) || 0, // default 0
+      }));
+
+      return { totalIncome, incomeData };
+    } catch (error: any) {
+      throw new BadRequest(`Failed to get payment summary: ${error.message}`);
+    }
+  }
 }
