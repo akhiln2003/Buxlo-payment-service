@@ -39,9 +39,9 @@ export class StripeService implements IStripeService {
           },
         ],
         mode: "payment",
-        success_url: `${process.env.FRONT_END_BASE_URL}/${type}success?id=${id}`,
-        cancel_url: `${process.env.FRONT_END_BASE_URL}/cancel?type=${type}&id={CHECKOUT_SESSION_ID}`,
-        expires_at: fiveMinutesFromNow, 
+        success_url: `https://www.akhiln.shop/${type}success?id=${id}`,
+        cancel_url: `https://www.akhiln.shop/cancel?type=${type}&id={CHECKOUT_SESSION_ID}`,
+        expires_at: fiveMinutesFromNow,
 
         metadata: {
           type,
@@ -58,7 +58,16 @@ export class StripeService implements IStripeService {
 
   async expireCheckoutSession(sessionId: string): Promise<void> {
     try {
-      await stripe.checkout.sessions.expire(sessionId);
+      const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+      if (session.status === "open") {
+        await stripe.checkout.sessions.expire(sessionId);
+        console.log(`Session ${sessionId} expired successfully.`);
+      } else {
+        console.log(
+          `Skip expiring session ${sessionId}: already ${session.status}.`
+        );
+      }
     } catch (err) {
       console.error("Failed to expire stripe session", err);
       throw new BadRequest("Could not expire old stripe session");

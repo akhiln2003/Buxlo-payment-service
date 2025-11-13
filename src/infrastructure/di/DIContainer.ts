@@ -45,6 +45,8 @@ import { FetchPaymentHistorySummaryUseCase } from "../../application/usecase/use
 import { IFetchPaymentHistorySummaryUseCase } from "../../application/interface/user/IFetchPaymentHistorySummaryUseCase";
 import { IFetchIncomeSummeryUseCase } from "../../application/interface/admin/IFetchIncomeSummeryUseCase";
 import { FetchIncomeSummeryUseCase } from "../../application/usecase/admin/fetchIncomeSummery.useCase";
+import { DeleteSubscriptionPlanUseCase } from "../../application/usecase/admin/deleteSubscriptionPlan.useCase";
+import { IDeleteSubscriptionPlanUseCase } from "../../application/interface/admin/IDeleteSubscriptionPlanUseCase";
 
 export class DIContainer {
   private _subscriptionPlanRepository: SubscriptionRepository;
@@ -79,6 +81,10 @@ export class DIContainer {
 
   updateSubscriptionPlanUseCase(): IUpdateSubscriptionPlanUseCase {
     return new UpdateSubscriptionPlanUseCase(this._subscriptionPlanRepository);
+  }
+
+  deleteSubscriptionPlanUseCase(): IDeleteSubscriptionPlanUseCase {
+    return new DeleteSubscriptionPlanUseCase(this._subscriptionPlanRepository);
   }
 
   createWalletUseCase(): ICreateWalletUseCase {

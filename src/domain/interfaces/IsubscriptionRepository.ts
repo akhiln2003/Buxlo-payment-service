@@ -5,4 +5,5 @@ export interface IsubscriptionRepository {
   update(id: string, data: Partial<Subscription>): Promise<Subscription>;
   getSubscriptionDetails(): Promise<Subscription[]>;
   findById(id: string): Promise<Subscription>;
+  delete(id: string): Promise<Subscription>;
 }

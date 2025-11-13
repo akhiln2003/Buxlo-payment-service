@@ -11,20 +11,36 @@ export class ExpressWebServer implements IServer {
 
   constructor() {
     this._app = express();
+    
+    // ⚡ CRITICAL: Webhook route MUST be registered BEFORE any body parsers
+    // This ensures the raw buffer is preserved for Stripe signature verification
+    const webhookRouter = new WebHookRouter();
     this._app.use(
-      "/api/payment/stripe",
+      "/api/payment/stripe/webhook",
       express.raw({ type: "application/json" }),
-      new WebHookRouter().getRouter()
+      (req, res, next) => {
+        console.log("🚀 Stripe webhook received at Payment Service!");
+        console.log("Headers:", req.headers);
+        console.log("Body is Buffer:", Buffer.isBuffer(req.body));
+        console.log("Body length:", req.body?.length);
+        console.log("Stripe-Signature:", req.headers["stripe-signature"]);
+        next();
+      },
+      webhookRouter.getRouter()
     );
+
+    // ✅ Now apply regular body parsers for other routes
     this._app.use(cookieParser());
     this._app.use(express.urlencoded({ extended: true }));
     this._app.use(express.json());
 
     this._server = createServer(this._app);
   }
+
   registerMiddleware(middleware: RequestHandler): void {
     this._app.use(middleware);
   }
+
   registerRoutes(path: string, router: Router): void {
     this._app.use(path, router);
   }
@@ -32,6 +48,7 @@ export class ExpressWebServer implements IServer {
   registerErrorHandler(middleware: RequestHandler): void {
     this._app.use(middleware);
   }
+
   async start(port: number): Promise<void> {
     return new Promise((res) => {
       this._server.listen(port, () => {

@@ -22,7 +22,7 @@ export class WebHookRouter {
   }
 
   private _initializeRoutes(): void {
-    this._router.post("/webhook", this._webHookController.webHook);
+    this._router.post("/", this._webHookController.webHook);
   }
 
   public getRouter(): Router {

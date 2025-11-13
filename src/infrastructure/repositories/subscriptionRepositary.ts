@@ -60,4 +60,24 @@ export class SubscriptionRepository implements IsubscriptionRepository {
       );
     }
   }
+
+  async delete(id: string): Promise<Subscription> {
+    try {
+      const existingPlan = await this._repository.findOneBy({ id });
+
+      if (!existingPlan) {
+        throw new BadRequest("Subscription plan not found");
+      }
+
+      await this._repository.delete(id);
+
+      return existingPlan;
+    } catch (error: any) {
+      console.error(
+        "Error from subscription repository failed to delete",
+        error
+      );
+      throw new BadRequest(`Failed to delete subscription: ${error.message}`);
+    }
+  }
 }
