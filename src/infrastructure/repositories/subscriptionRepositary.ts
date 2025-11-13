@@ -11,10 +11,12 @@ export class SubscriptionRepository implements IsubscriptionRepository {
   constructor() {
     this._repository = AppDataSource.getRepository(SubscriptionEntity);
   }
-
   async create(data: Subscription): Promise<Subscription> {
     try {
-      const subscription = this._repository.create(data);
+      const subscription = this._repository.create({
+        ...data,
+        isDeleted: false,
+      });
       return await this._repository.save(subscription);
     } catch (error: any) {
       throw new BadRequest(`Failed to create subscription: ${error.message}`);
@@ -36,23 +38,24 @@ export class SubscriptionRepository implements IsubscriptionRepository {
 
   async getSubscriptionDetails(): Promise<Subscription[]> {
     try {
-      return await this._repository.find();
+      return await this._repository.find({
+        where: { isDeleted: false },
+      });
     } catch (error: any) {
-      console.error(
-        "Error from subscription repository faild to fetch ",
-        error
-      );
       throw new BadRequest(`Failed to fetch subscription: ${error.message}`);
     }
   }
 
   async findById(id: string): Promise<Subscription> {
     try {
-      const plan = await this._repository.findOneBy({ id });
+      const plan = await this._repository.findOne({
+        where: { id, isDeleted: false },
+      });
 
       if (!plan) {
-        throw new BadRequest("Subscription payment not found");
+        throw new BadRequest("Subscription plan not found");
       }
+
       return plan;
     } catch (error: any) {
       throw new BadRequest(
@@ -69,14 +72,11 @@ export class SubscriptionRepository implements IsubscriptionRepository {
         throw new BadRequest("Subscription plan not found");
       }
 
-      await this._repository.delete(id);
+      existingPlan.isDeleted = true;
+      await this._repository.save(existingPlan);
 
       return existingPlan;
     } catch (error: any) {
-      console.error(
-        "Error from subscription repository failed to delete",
-        error
-      );
       throw new BadRequest(`Failed to delete subscription: ${error.message}`);
     }
   }

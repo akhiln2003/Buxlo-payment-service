@@ -21,6 +21,12 @@ export class SubscriptionEntity extends BaseEntity {
   @Column()
   type: string;
 
+  @Column("int")
+  duration: number;
+
+  @Column({ default: false })
+  isDeleted: boolean;
+
   @CreateDateColumn()
   createdAt: Date;
 

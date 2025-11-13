@@ -184,19 +184,9 @@ export class WebHookUseCase implements IWebHookUseCase {
       );
 
       const premiumEndDate = new Date();
-      switch (subscriptionPlan.type) {
-        case "Day":
-          premiumEndDate.setDate(premiumEndDate.getDate() + 1);
-          break;
-        case "Month":
-          premiumEndDate.setMonth(premiumEndDate.getMonth() + 1);
-          break;
-        case "Year":
-          premiumEndDate.setFullYear(premiumEndDate.getFullYear() + 1);
-          break;
-        default:
-          throw new Error("Invalid subscription plan duration");
-      }
+      premiumEndDate.setDate(
+        premiumEndDate.getDate() + subscriptionPlan.duration
+      );
 
       const data = {
         amount: subscriptionPaymetrepo.amount,

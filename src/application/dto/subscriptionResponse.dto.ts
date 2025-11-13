@@ -6,6 +6,7 @@ export const SubscriptionResponseDto = z.object({
   price: z.number(),
   offer: z.number(),
   type: z.string(),
+  duration: z.number(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
@@ -19,6 +20,7 @@ export class SubscriptionMapper {
       price: Number(subscription.price),
       offer: Number(subscription.offer),
       type: subscription.type,
+      duration: subscription.duration,
       createdAt: new Date(subscription.createdAt as Date),
       updatedAt: new Date(subscription.updatedAt as Date),
     });
