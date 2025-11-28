@@ -3,10 +3,12 @@ import { PaymentHistory } from "../entities/paymentHistory.entityes";
 
 export interface IPaymentHistoryRepository {
   create(data: PaymentHistory): Promise<PaymentHistory>;
+
   update(
     paymentId: string,
     data: Partial<PaymentHistory>
   ): Promise<PaymentHistory>;
+
   findByIdAndUpdate(
     id: string,
     data: Partial<PaymentHistory>
@@ -18,7 +20,14 @@ export interface IPaymentHistoryRepository {
     status: PaymentHistoryStatus | "all",
     searchData?: string
   ): Promise<{ datas: PaymentHistory[]; totalPages: number }>;
+
   cancelPendingPaymentsByUser(userId: string): Promise<PaymentHistory[]>;
+
+  findExistingPaymentIds(
+    userId: string,
+    paymentIds: string[]
+  ): Promise<string[]>;
+
   getPaymentSummary(
     userId: string,
     year?: string,
@@ -32,5 +41,5 @@ export interface IPaymentHistoryRepository {
       category: string;
       totalDebit: number;
     }[];
-  }>
+  }>;
 }

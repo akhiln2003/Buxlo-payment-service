@@ -16,14 +16,32 @@ export class PaymentHistoryRepository implements IPaymentHistoryRepository {
 
   async create(data: PaymentHistory): Promise<PaymentHistory> {
     try {
-      await this._repository.delete({ paymentId: data.paymentId });
       const newPaymentHistory = this._repository.create(data);
       const savedEntity = await this._repository.save(newPaymentHistory);
-
       return savedEntity;
     } catch (error: any) {
       throw new BadRequest(
         `Failed to create payment history: ${error.message}`
+      );
+    }
+  }
+
+  async findExistingPaymentIds(
+    userId: string,
+    paymentIds: string[]
+  ): Promise<string[]> {
+    try {
+      const existingPayments = await this._repository
+        .createQueryBuilder("payment")
+        .select("payment.paymentId")
+        .where("payment.userId = :userId", { userId })
+        .andWhere("payment.paymentId IN (:...paymentIds)", { paymentIds })
+        .getMany();
+
+      return existingPayments.map((p) => p.paymentId);
+    } catch (error: any) {
+      throw new BadRequest(
+        `Failed to check existing payment IDs: ${error.message}`
       );
     }
   }
@@ -45,6 +63,7 @@ export class PaymentHistoryRepository implements IPaymentHistoryRepository {
       throw new BadRequest(`Failed to update payment: ${error.message}`);
     }
   }
+
   async findByIdAndUpdate(
     id: string,
     data: Partial<PaymentHistory>
@@ -75,15 +94,12 @@ export class PaymentHistoryRepository implements IPaymentHistoryRepository {
 
       const query = this._repository.createQueryBuilder("payment");
 
-      // always filter by userId
       query.where("payment.userId = :userId", { userId });
 
-      // filter by status (if not "all")
       if (status !== "all") {
         query.andWhere("payment.status = :status", { status });
       }
 
-      // search filter
       if (searchData && searchData.trim() !== "") {
         query.andWhere(
           `(payment.paymentId ILIKE :search 
@@ -135,7 +151,6 @@ export class PaymentHistoryRepository implements IPaymentHistoryRepository {
     }[];
   }> {
     try {
-      // Normalize bad values from frontend
       if (startDate === "undefined" || startDate === "") startDate = undefined;
       if (endDate === "undefined" || endDate === "") endDate = undefined;
       if (startMonth === "undefined" || startMonth === "")
@@ -158,14 +173,12 @@ export class PaymentHistoryRepository implements IPaymentHistoryRepository {
           status: PaymentHistoryStatus.COMPLETED,
         });
 
-      // Filter by year
       if (year) {
         query.andWhere("EXTRACT(YEAR FROM payment.transactionDate) = :year", {
           year: Number(year),
         });
       }
 
-      // Filter by month range
       if (year && startMonth) {
         query.andWhere(
           `EXTRACT(YEAR FROM payment.transactionDate) = :year 
@@ -174,7 +187,6 @@ export class PaymentHistoryRepository implements IPaymentHistoryRepository {
         );
       }
 
-      // Filter by date range
       if (startDate && endDate) {
         query.andWhere(
           "payment.transactionDate BETWEEN :startDate AND :endDate",
@@ -186,7 +198,6 @@ export class PaymentHistoryRepository implements IPaymentHistoryRepository {
 
       const rawResults = await query.getRawMany();
 
-      // Compute overall totals
       const totalCredit = rawResults.reduce(
         (sum, r) => sum + Number(r.totalCredit || 0),
         0
@@ -196,13 +207,11 @@ export class PaymentHistoryRepository implements IPaymentHistoryRepository {
         0
       );
 
-      // Format category-wise data
       const categoryWise = rawResults.map((r) => ({
         category: r.category || "Uncategorized",
         totalDebit: Number(r.totalDebit || 0),
       }));
 
-      // Add synthetic summary rows
       categoryWise.unshift({ category: "Credit", totalDebit: 0 });
       categoryWise.push({ category: "Debit", totalDebit });
 
